@@ -2,18 +2,15 @@ const express = require('express')
 const db = require('../../pgUtils')
 const router = express.Router()
 
-router.get('/:Login', (req, res) => {
-  // console.log(req.params.email)
+router.post('/', (req, res) => {
+  const { subContractor } = req.body
   db.query(
-    'SELECT * FROM user_details WHERE login = $1',
-    [req.params.Login],
+    'SELECT * FROM TimeSlot WHERE Subcontractor = $1', [subContractor],
     (error, results) => {
       if (error) {
         return res.json(error)
       }
-      // console.log(results)
       res.json(results)
-      // res.status(200).json({ message: 'Logged in' });
     }
   )
 })

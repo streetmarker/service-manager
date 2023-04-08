@@ -9,13 +9,13 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn
+      <!-- <v-btn
         v-if="!$store.state.user.token.length > 0"
         :to="login.to"
         plain
       >
         <v-icon>{{ login.icon }}</v-icon>{{ login.title }}
-      </v-btn>
+      </v-btn> -->
       <!-- <v-btn
         v-if="$store.state.user.token.length > 0"
         to="/userPanel"
@@ -39,13 +39,13 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn
+      <!-- <v-btn
         v-if="!$store.state.user.token.length > 0"
         :to="login.to"
         plain
       >
         <v-icon>{{ login.icon }}</v-icon>{{ login.title }}
-      </v-btn>
+      </v-btn> -->
       <!-- <v-btn
         v-if="$store.state.user.token.length > 0"
         to="/userPanel"
@@ -58,7 +58,7 @@
         plain
         @click="logout"
       >
-        {{ $store.state.user.user.firstname }} | Wyloguj się
+        {{ $store.state.user.user.login }} | Wyloguj się
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -85,7 +85,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>{{ new Date().getFullYear() }} &copy; Service Panel</span>
     </v-footer>
   </v-app>
 </template>

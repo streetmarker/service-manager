@@ -5,12 +5,13 @@
         <v-form @submit.prevent>
           <h1>Login</h1>
           <v-text-field
-            v-model="email"
+            v-model="login"
             :rules="rules"
-            label="Email"
+            label="Login"
           />
           <v-text-field
             v-model="password"
+            type="password"
             :rules="rules"
             label="Password"
           />
@@ -19,31 +20,12 @@
             type="submit"
             block
             class="mt-2"
-            @click="login"
+            @click="logIn"
           >
             Log In
           </v-btn>
         </v-form>
       </v-card>
-      <!-- <v-alert v-if="successMsg && $store.state.user.token.length > 0" type="success">
-        {{ successMsg }}
-      </v-alert>
-      <v-btn
-        type="submit"
-        block
-        class="mt-2"
-        @click="getRecipes"
-      >
-        2. test get recipes
-      </v-btn>
-      <v-btn
-        type="submit"
-        block
-        class="mt-2"
-        @click="logout"
-      >
-        2. test logout
-      </v-btn> -->
       <v-alert v-if="errorMsg" type="error">
         {{ errorMsg }}
       </v-alert>
@@ -57,8 +39,8 @@ import { mapActions } from 'vuex'
 export default {
   name: 'IndexPage',
   data: () => ({
-    email: 'john.doe@example.com', // test
-    password: 'password', // test
+    login: 'admin', // test
+    password: 'admin', // test
     rules: [
       (value) => {
         if (value) { return true }
@@ -80,40 +62,23 @@ export default {
   methods: {
     ...mapActions('user', ['fetchUser', 'fetchToken', 'logoutAction']),
 
-    login () {
+    logIn () {
       // przenieść do store
       this.errorMsg = ''
       this.successMsg = ''
       const userData = {
-        email: this.email,
+        login: this.login,
         password: this.password
       }
       try {
-        this.fetchUser(this.email) // zapis do store
+        this.fetchUser(this.login) // zapis do store
         this.fetchToken(userData) // init token w store
         setTimeout(() => {
           this.token = this.$store.state.user.token
           this.$store.state.user.token.length === 0
-            ? (this.errorMsg = 'Wrong email or password')
+            ? (this.errorMsg = 'Wrong login or password')
             : (this.successMsg = 'Logged in')
         }, 500)
-      } catch (err) {
-        this.errorMsg = err
-        // eslint-disable-next-line no-console
-        console.log(err)
-      }
-    },
-    async getRecipes () {
-      this.errorMsg = ''
-      try {
-        const response = await this.$axios.get('/api/recipes', {
-          // body
-          // }, {
-          headers: {
-            authorization: 'Bearer ' + this.$store.state.user.token
-          }
-        })
-        this.recipes = response.data
       } catch (err) {
         this.errorMsg = err
         // eslint-disable-next-line no-console

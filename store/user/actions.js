@@ -1,6 +1,6 @@
 export default {
-  async fetchUser ({ commit }, email) {
-    const response = await this.$axios.get(`/api/details/${email}`)
+  async fetchUser ({ commit }, Login) {
+    const response = await this.$axios.get(`/api/details/${Login}`)
     commit('setUser', response.data.rows[0])
   },
   logoutAction ({ commit }) {

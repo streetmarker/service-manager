@@ -2,18 +2,16 @@ const express = require('express')
 const db = require('../../pgUtils')
 const router = express.Router()
 
-router.get('/:Login', (req, res) => {
-  // console.log(req.params.email)
+router.post('/', (req, res) => {
+  const { displayName, lat, lon } = req.body
   db.query(
-    'SELECT * FROM user_details WHERE login = $1',
-    [req.params.Login],
+    'INSERT INTO Location (Display_name, Coordinates) VALUES ($1, point($2, $3))',
+    [displayName, lat, lon],
     (error, results) => {
       if (error) {
         return res.json(error)
       }
-      // console.log(results)
       res.json(results)
-      // res.status(200).json({ message: 'Logged in' });
     }
   )
 })
