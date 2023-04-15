@@ -15,15 +15,15 @@
       {{ tmp }} km
     </v-card-text>
     <v-card-actions>
-      <v-btn clearable @click="searchLocation">
-        Search
+      <v-btn color="secondary" clearable @click="searchLocation">
+        Szukaj
       </v-btn>
-      <v-btn v-if="location.display_name.length > 0" @click="addToDb">
-        ADD TO DB
+      <v-btn v-if="location.display_name.length > 0" color="primary" @click="addToDb">
+        Wybierz
       </v-btn>
-      <v-btn @click="calculateMatrix(52.24303985, 21.26271994765838, location.lat, location.lon)">
+      <!-- <v-btn color="primary" @click="calculateMatrix(52.24303985, 21.26271994765838, location.lat, location.lon)">
         CALCULATE
-      </v-btn>
+      </v-btn> -->
     </v-card-actions>
   </v-card>
 </template>
@@ -48,12 +48,8 @@ export default {
     }
   },
 
-  // mounted() {
-
-  // },
-
   methods: {
-    calculateMatrix (lat1, lon1, lat2, lon2) {
+    calculateMatrix (lat1, lon1, lat2, lon2) { // to DEL
       function deg2rad (deg) {
         return deg * (Math.PI / 180)
       }
@@ -69,41 +65,17 @@ export default {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
       const distance = R * c // odległość w kilometrach
       this.tmp = distance.toFixed(2)
-
-      // console.log(b)
-      // const options = {
-      //   method: 'GET',
-      //   url: 'https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix',
-      //   params: {
-      //     origins: a,
-      //     destinations: b
-      //   },
-      //   headers: {
-      //     'X-RapidAPI-Key': process.env.NUXT_ENV_RAPIDAPI_KEY,
-      //     'X-RapidAPI-Host': 'trueway-matrix.p.rapidapi.com'
-      //   }
-      // }
-
-    // const response = await this.$axios.request(options).then(function (response) {
-    //   console.log(response.data)
-    //   return response.data
-    // }).catch(function (error) {
-    //   console.error(error)
-    // })
-    // setTimeout(() => {
-    //   this.tmp = (response.distances[0][0] / 1000 * 1.609344)
-    // }, 50)
     },
     async searchLocation () {
       const encodedQuery = encodeURIComponent(this.searchText)
-      const response = await this.$axios.get(`https://nominatim.openstreetmap.org/search?q=${encodedQuery}&format=json`).then((res, err) => {
-        try {
-          return res
-        } catch (error) {
-        // eslint-disable-next-line no-console
-          console.log(error)
-        }
+      const response = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          this.$axios.get(`https://nominatim.openstreetmap.org/search?q=${encodedQuery}&format=json`)
+            .then(res => resolve(res))
+            .catch(err => reject(err))
+        }, 50)
       })
+
       const data = response.data[0]
       if (data) {
         this.location = data
@@ -114,6 +86,7 @@ export default {
           this.errorMsg = ''
         }, 3000)
       }
+      this.calculateMatrix(52.24303985, 21.26271994765838, this.location.lat, this.location.lon)
     },
     async addToDb () {
       const body = {
@@ -131,6 +104,8 @@ export default {
             this.errorMsg = ''
           }, 3000)
         } else {
+          const locationId = response.data.rows[0].id
+          this.$emit('location-added', locationId) // emit to parent
           this.info = 'Dodano'
           setTimeout(() => {
             this.info = ''

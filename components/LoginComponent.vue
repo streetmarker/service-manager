@@ -3,11 +3,23 @@
     <v-col cols="12" sm="8" md="6">
       <v-card v-if="!$store.state.user.token.length>0" class="logo py-4 d-flex justify-center">
         <v-form @submit.prevent>
-          <h1>Login</h1>
+          <h1 v-if="type === 'user'">
+            Staff Login
+          </h1>
+          <h1 v-if="type === 'customer'">
+            Client Login
+          </h1>
           <v-text-field
+            v-if="type === 'user'"
             v-model="login"
             :rules="rules"
             label="Login"
+          />
+          <v-text-field
+            v-else-if="type === 'customer'"
+            v-model="customerId"
+            :rules="rules"
+            label="ID"
           />
           <v-text-field
             v-model="password"
@@ -38,7 +50,14 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'IndexPage',
+  props: {
+    type: {
+      type: String,
+      default: 'user'
+    }
+  },
   data: () => ({
+    customerId: null,
     login: 'admin', // test
     password: 'admin', // test
     rules: [
@@ -61,23 +80,42 @@ export default {
   },
   methods: {
     ...mapActions('user', ['fetchUser', 'fetchToken', 'logoutAction']),
+    ...mapActions('customer', ['fetchCustomer', 'fetchTokenCustomer', 'logoutActionCustomer']),
 
     logIn () {
       // przenieść do store
       this.errorMsg = ''
       this.successMsg = ''
+      let ident = null
+      if (this.type === 'user') {
+        ident = this.login
+      } else if (this.type === 'customer') {
+        ident = Number(this.customerId)
+      }
       const userData = {
-        login: this.login,
+        ident,
         password: this.password
       }
       try {
-        this.fetchUser(this.login) // zapis do store
-        this.fetchToken(userData) // init token w store
+        if (this.type === 'user') {
+          this.fetchUser(this.login) // zapis do store
+          this.fetchToken(userData) // init token w store
+        } else if (this.type === 'customer') {
+          this.fetchCustomer(this.customerId) // zapis do store
+          this.fetchTokenCustomer(userData) // init token w store
+        }
         setTimeout(() => {
-          this.token = this.$store.state.user.token
-          this.$store.state.user.token.length === 0
-            ? (this.errorMsg = 'Wrong login or password')
-            : (this.successMsg = 'Logged in')
+          if (this.type === 'user') {
+            this.token = this.$store.state.user.token
+            this.$store.state.user.token.length === 0
+              ? (this.errorMsg = 'Wrong login or password')
+              : (this.successMsg = 'Logged in')
+          } else if (this.type === 'customer') {
+            this.token = this.$store.state.customer.token
+            this.$store.state.customer.token.length === 0
+              ? (this.errorMsg = 'Wrong login or password')
+              : (this.successMsg = 'Logged in')
+          }
         }, 500)
       } catch (err) {
         this.errorMsg = err
@@ -89,6 +127,7 @@ export default {
       // this.token = ''
       // this.successMsg = ''
       this.logoutAction() // reset store
+      this.logoutActionCustomer() // reset store
     }
   }
 }

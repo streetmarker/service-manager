@@ -1,4 +1,5 @@
-import { Pool } from 'pg'
+const { Pool } = require('pg')
+require('dotenv').config()
 
 const pool = new Pool({
   user: 'postgres',
@@ -12,4 +13,7 @@ module.exports = {
   query: (text, params, callback) => {
     return pool.query(text, params, callback)
   }
+  // end: () => {
+  //   pool.end()
+  // }
 }

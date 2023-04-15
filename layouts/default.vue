@@ -7,6 +7,9 @@
         <v-btn to="/">
           {{ title }}
         </v-btn>
+        <v-btn to="/customerForm">
+          TEST customerForm
+        </v-btn>
       </v-toolbar-title>
       <v-spacer />
       <!-- <v-btn
@@ -102,15 +105,15 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-search',
+          icon: 'mdi-circle',
           title: 'Service Panel',
           to: '/'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Subcontractor Manager',
+          to: '/subcontractorManager'
         }
-        // {
-        //   icon: 'mdi-chart-bubble',
-        //   title: 'Inspire',
-        //   to: '/inspire',
-        // },
       ],
       login: {
         icon: 'mdi-account-circle-outline',

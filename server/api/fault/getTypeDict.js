@@ -4,7 +4,7 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
   db.query(
-    'SELECT * FROM Subcontractor',
+    'SELECT * FROM FaultType',
     (error, results) => {
       if (error) {
         return res.json(error)

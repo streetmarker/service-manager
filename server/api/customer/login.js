@@ -10,13 +10,12 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const { ident, password } = req.body
   db.query(
-    'SELECT * FROM users WHERE login = $1 AND password = $2',
+    'SELECT * FROM customer WHERE id = $1 AND password = $2',
     [ident, password],
     (error, results) => {
       if (error) {
         throw error
       }
-
       if (results.rows.length === 0) {
         res.status(401).json('Invalid login or password')
       } else {
