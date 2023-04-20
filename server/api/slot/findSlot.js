@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { calculateMatrix } from '../functions/calculateMatrix.js'
 const express = require('express')
 const db = require('../../pgUtils')
@@ -21,41 +22,28 @@ router.post('/', async (req, res) => {
     `SELECT  s.id ,s."name" ,s.city, s.location_id ,l.display_name,l.coordinates  FROM subcontractor s
     LEFT JOIN location l ON s.location_id = l.id
     WHERE s.city = $1`, [city]
-    // (error, results) => {
-    //   if (error) {
-    //     return res.json(error)
-    //   } else {
-    //     res.json(results)
-    //   }
   )
-  // res.json(results)
-  // console.log('res1: ', results)
-  // console.log('matrix', calculateMatrix)
-  // console.log(res1)
   const firms = []
   res1.rows.forEach((element) => {
     firms.push({ firm: element, matrix: calculateMatrix(clientLocation.x, clientLocation.y, element.coordinates.x, element.coordinates.y) })
   })
   // console.log('sorted firms: ', firms.sort())
   const sortedFirms = firms.sort()
+  const start = date + 'T00:00:00.000'
+  const end = date + 'T23:59:00.000'
   const res2 = await db.query(
         `SELECT * FROM subcontractor su
         LEFT JOIN serviceman se ON se.subcontractor_id = su.id
         LEFT JOIN timeslot t ON t.serviceman_id = se.id
         WHERE se.subcontractor_id = $1
-        AND t.date = $2`, [sortedFirms[0].firm.id, date])
-  // (error, results) => {
-  //   if (error) {
-  //     return res.json(error)
-  //   }
-  // const data = results.rows
-  // console.log(res2)
+        AND t.date > $2
+        AND t.date < $3`, [sortedFirms[0].firm.id, start, end])
   if (res2.rows) {
     try {
       const availableTechnicians = []
       res2.rows.forEach((element) => {
         if (element && element.qualifications && element.qualifications.includes(typeId)) {
-          console.log('TECHNICIAN', element)
+          // console.log('TECHNICIAN', element)
           availableTechnicians.push(element)
         }
       })
@@ -74,7 +62,6 @@ router.post('/', async (req, res) => {
     console.log('no res2.rows')
     res.json({ message: 'brak slotów, wybierz inny termin' })
   }
-  // db.end()
 })
 
 module.exports = router

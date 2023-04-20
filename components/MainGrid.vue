@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-lone-template -->
 <template>
   <v-card>
     <!-- firmy select -->
@@ -9,7 +10,6 @@
         label="Wybierz firmę"
         :items="firms"
       />
-      <!-- <input v-model="dateSelect" style="color: aliceblue;" type="date"> -->
       <v-menu
         ref="menu"
         v-model="menu"
@@ -33,12 +33,6 @@
           no-title
         />
       </v-menu>
-      <!-- {{ new Date('2023-04-15T22:00:00.000Z').to .getTime() == dateSelect.getTime() }} -->
-      <!-- <v-date-picker
-        v-model="dateSelect"
-        color="info"
-        elevation="15"
-      /> -->
     </v-card-title>
     <template>
       <div>
@@ -84,6 +78,7 @@
                 </v-col>
               </v-row>
             </v-list-item>
+            <div v-else />
           </v-list>
         </v-container>
       </div>
@@ -95,18 +90,11 @@
 export default {
   data () {
     return {
-      // const today = new Date();
-
-      // const year = today.getFullYear();
-      // const month = String(today.getMonth() + 1).padStart(2, '0');
-      // const day = String(today.getDate()).padStart(2, '0');
-
-      // const formattedDate = `${year}-${month}-${day}`;
       firm: '',
       firms: [], // list firm from DB
       timeTable: [{ id: 1, start: 7, end: 9 }, { id: 2, start: 9, end: 11 }, { id: 3, start: 11, end: 13 }, { id: 4, start: 13, end: 15 }, { id: 5, start: 15, end: 17 }, { id: 6, start: 17, end: 19 }, { id: 7, start: 19, end: 21 }], // { id: 8, start: 20, end: 22 }], { id: 9, start: 16, end: 17 }, { id: 10, start: 17, end: 18 }, { id: 11, start: 18, end: 19 }, { id: 12, start: 19, end: 20 }, { id: 13, start: 20, end: 21 }],
       timeSlots: [],
-      dateSelect: new Date().toISOString().substr(0, 10), // (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+      dateSelect: new Date().toISOString().substr(0, 10),
       menu: false,
       offsetTop: 0
     }
@@ -114,6 +102,9 @@ export default {
   watch: {
     firm (newVal) {
       this.getSlots(newVal)
+    },
+    dateSelect () {
+      this.getSlots(this.firm)
     }
   },
   mounted () {
@@ -125,11 +116,13 @@ export default {
     },
     async getSlots (firm) {
       const body = {
-        subContractor: firm
+        subContractor: firm,
+        date: this.dateSelect
       }
       // console.log(body)
       const response = await this.$axios.post('api/getFirmSlots', body)
       this.timeSlots = response.data.rows
+      // eslint-disable-next-line no-console
       console.log('timeSlots: ', this.timeSlots)
     },
     async getFirms () {

@@ -16,7 +16,9 @@ const findSlot = require('./api/slot/findSlot')
 
 const getFirmSlots = require('./api/subContractors/getFirmSlots')
 const getFirms = require('./api/subContractors/getFirms')
+const addFirm = require('./api/subContractors/addFirm')
 const getServiceman = require('./api/subContractors/getServiceman')
+const addServiceman = require('./api/subContractors/addServiceman')
 
 const getTypeDict = require('./api/fault/getTypeDict')
 
@@ -41,7 +43,9 @@ app.use('/findSlot', findSlot)
 
 app.use('/getFirmSlots', getFirmSlots)
 app.use('/getFirms', getFirms)
+app.use('/addFirm', addFirm)
 app.use('/getServiceman', getServiceman)
+app.use('/addServiceman', addServiceman)
 
 app.use('/getTypeDict', getTypeDict)
 

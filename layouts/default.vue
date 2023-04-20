@@ -1,8 +1,9 @@
 <template>
   <v-app dark>
     <!-- v-if="Object.keys($store.state.user.user).length == 0" -->
+    <!-- nie działa kolor dla customera -->
     <v-app-bar v-if="Object.keys($store.state.user.user).length == 0" :clipped-left="clipped" fixed app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> -->
       <v-toolbar-title>
         <v-btn to="/">
           {{ title }}
@@ -88,7 +89,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :absolute="!fixed" app>
-      <span>{{ new Date().getFullYear() }} &copy; Service Panel</span>
+      <span>&copy; {{ new Date().getFullYear() }} Service Panel</span>
     </v-footer>
   </v-app>
 </template>
@@ -113,6 +114,11 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Subcontractor Manager',
           to: '/subcontractorManager'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Customer Manager',
+          to: '/customerManager'
         }
       ],
       login: {

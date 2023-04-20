@@ -1,6 +1,6 @@
 CREATE TABLE FaultType ( -- na razie brak możliwości usuwania rekordów
 	ID SERIAL PRIMARY KEY,
-	Name VARCHAR(100) UNIQUE
+	Name VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE Location (
@@ -42,7 +42,7 @@ CREATE TABLE TimeSlot (
   Serviceman_ID INTEGER NOT null references Serviceman(ID),
   Subcontractor_ID INTEGER NOT null references Subcontractor(ID),
   Reserved INTEGER[] NOT NULL, -- ref na fault type
-  Date DATE NOT NULL
+  Date timestamp NOT NULL
 );
 
 CREATE TABLE Customer (
@@ -57,13 +57,31 @@ CREATE TABLE Customer (
   Contract_end DATE NOT NULL
 );
 
+CREATE TABLE FaultStatus (
+	ID SERIAL PRIMARY KEY,
+	Name VARCHAR(100) UNIQUE NOT NULL,
+  Result VARCHAR(30) UNIQUE NOT NULL -- success, to replan, cancelled
+);
+
+CREATE TABLE Fault (
+  ID SERIAL PRIMARY KEY,
+  Customer_ID INTEGER NOT NULL REFERENCES Customer(ID),
+  RequestDate timestamp NOT NULL,
+  Description VARCHAR(500) NOT NULL,
+  FaultType_ID INTEGER NOT NULL REFERENCES FaultType(ID),
+  TimeSlot_ID INTEGER NOT NULL REFERENCES TimeSlot(ID),
+  Comments 
+  IsActive BOOLEAN NOT NULL,
+  FaultStatus_ID INTEGER NOT NULL REFERENCES FaultStatus(ID),
+);
+
 -- MOCK
 INSERT INTO FaultType (Name) VALUES ('Uszkodzenie okablowania w lokalu');
 INSERT INTO FaultType (Name) VALUES ('Uszkodzenie okablowania na posesji');
 
 -- INSERT INTO TimeSlot (Username, Subcontractor, Reserved, Date) VALUES ('Joe', 'Test Firm', '{2, 4}', '2023-04-08');
 -- INSERT INTO TimeSlot (Username, Subcontractor, Reserved, Date) VALUES ('Adam', 'Test Firm', '{2, 4}', '2023-04-08');
-INSERT INTO TimeSlot (Serviceman_ID, Subcontractor_ID, Reserved, Date) VALUES (1, 1, '{2, 4}', '2023-04-08')
+INSERT INTO TimeSlot (Serviceman_ID, Subcontractor_ID, Reserved, Date) VALUES (1, 1, '{2, 4}', '2023-04-08');
 
 INSERT INTO Roles (Name, Is_admin) VALUES ('Admin', true);
 INSERT INTO Roles (Name, Is_admin) VALUES ('Back Office', false);
@@ -79,8 +97,8 @@ INSERT INTO serviceman (users_id , qualifications , subcontractor_id) VALUES (3,
 INSERT INTO serviceman (users_id , qualifications , subcontractor_id) VALUES (4, '{1,2}', 1);
 INSERT INTO serviceman (users_id , qualifications , subcontractor_id) VALUES (5, '{1,2}', 2);
 
-insert into subcontractor (Name, City, Location_ID) values ('KFC TEST', 'Sulejówek', 2)
-insert into subcontractor (Name, City, Location_ID) values ('Klimat', 'Wesoła', 6)
+insert into subcontractor (Name, City, Location_ID) values ('KFC TEST', 'Sulejówek', 2);
+insert into subcontractor (Name, City, Location_ID) values ('Klimat', 'Wesoła', 6);
 
 INSERT INTO Customer (Full_name, Password, Phone, Email, City, Location_ID, Contract_start, Contract_end)
 VALUES ('Anna Kowalska', 'password123', '555-123-456', 'anna.kowalska@example.com', 'Sulejówek', 5, '2022-01-01', '2022-12-31'),
@@ -89,18 +107,18 @@ VALUES ('Anna Kowalska', 'password123', '555-123-456', 'anna.kowalska@example.co
 -- VIEWS
 CREATE VIEW user_details AS
 SELECT u.login, u.email, r.name AS roleName, r.is_admin AS isAdmin FROM Users u
-LEFT JOIN Roles r ON u.Role_ID = r.ID
+LEFT JOIN Roles r ON u.Role_ID = r.ID;
 
 CREATE VIEW customer_details as
 select c.id, c.full_name, c.phone, c.email, c.city, l.display_name, l.coordinates,
 c.contract_start, c.contract_end from customer c
-left join "location" l on l.id = c.location_id 
+left join "location" l on l.id = c.location_id ;
 
-create view main_grid as
+create view v_main_grid as
 select t.id as id, u.login as username, s2."name" as subcontractor, t.reserved, t."date"  from timeslot t 
 left join serviceman s on s.id = t.serviceman_id 
 left join subcontractor s2 on t.subcontractor_id = s2.id 
-left join users u on u.id = s.users_id 
+left join users u on u.id = s.users_id ;
 
 
 -- USEFUL

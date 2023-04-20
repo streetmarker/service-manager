@@ -1,61 +1,99 @@
 <template>
-  <div>
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="fullName"
-        :rules="rule"
-        label="Imię i Nazwisko"
-        required
-      />
-      <v-text-field
-        v-model="phone"
-        :rules="rule"
-        label="Numer telefonu"
-        required
-      />
-      <v-text-field
-        v-model="email"
-        :rules="rule"
-        label="Email"
-        required
-      />
-      <v-text-field
-        v-model="city"
-        :rules="rule"
-        label="Miasto"
-        required
-      />
-      <v-date-picker
-        v-model="contractStart"
-        color="info"
-        elevation="15"
-      />
-      <v-date-picker
-        v-model="contractEnd"
-        :rules="dateRule"
-        color="info"
-        elevation="15"
-      />
-      {{ contractStart }}
-      {{ contractEnd }}
-      <SearchLocation @location-added="handleLocationAdded" />
-      <v-alert type="info">Wyszukaj i wybierz lokalizację przed dodaniem</v-alert>
-      <v-card-actions>
-        <v-btn
-          :disabled="!valid"
-          color="info"
-          class="mr-4"
-          @click="send"
+  <v-card>
+    <v-card-title>Dodawanie klienta do bazy danych</v-card-title>
+    <v-card-text>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="fullName"
+          :rules="rule"
+          label="Imię i Nazwisko"
+          required
+        />
+        <v-text-field
+          v-model="phone"
+          :rules="rule"
+          label="Numer telefonu"
+          required
+        />
+        <v-text-field
+          v-model="email"
+          :rules="rule"
+          label="Email"
+          required
+        />
+        <v-text-field
+          v-model="city"
+          :rules="rule"
+          label="Miasto"
+          required
+        />
+        <v-menu
+          ref="menu1"
+          v-model="menu1"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="auto"
         >
-          Szukaj
-        </v-btn>
-      </v-card-actions>
-    </v-form>
-  </div>
+          <template #activator="{ on, attrs }">
+            <v-text-field
+              v-model="contractStart"
+              label="Data rozpoczęcia umowy"
+              prepend-icon="mdi-calendar"
+              v-bind="attrs"
+              required
+              v-on="on"
+            />
+          </template>
+          <v-date-picker
+            v-model="contractStart"
+            no-title
+          />
+        </v-menu>
+        <v-menu
+          ref="menu2"
+          v-model="menu2"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="auto"
+        >
+          <template #activator="{ on, attrs }">
+            <v-text-field
+              v-model="contractEnd"
+              label="Data zakończenia umowy"
+              prepend-icon="mdi-calendar"
+              v-bind="attrs"
+              required
+              v-on="on"
+            />
+          </template>
+          <v-date-picker
+            v-model="contractEnd"
+            no-title
+          />
+        </v-menu>
+        <v-alert type="info">
+          Wyszukaj i wybierz lokalizację przed dodaniem
+        </v-alert>
+        <SearchLocation @location-added="handleLocationAdded" />
+        <v-card-actions>
+          <v-btn
+            :disabled="!valid"
+            color="info"
+            class="mr-4"
+            @click="send"
+          >
+            Zapisz klienta
+          </v-btn>
+        </v-card-actions>
+      </v-form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -80,10 +118,11 @@ export default {
       ],
       dateRule: [
         (v) => {
-          // eslint-disable-next-line eqeqeq
           return (v === this.contractStart) || 'lol'
         }
       ],
+      menu1: false,
+      menu2: false,
       locationId: null
     }
   },
@@ -113,6 +152,5 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+  <style lang="scss" scoped />
+</template>

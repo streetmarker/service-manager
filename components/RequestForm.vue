@@ -75,15 +75,17 @@
       <v-card-title>
         Wolne sloty czasowe {{ picker }}
       </v-card-title>
-      <v-row>
-        <v-list v-for="time in timeTable" :key="time.id">
-          <v-list-item>
-            <v-btn v-if="freeSlot.includes(time.id)" color="primary">
-              {{ time.start }} - {{ time.end }}
-            </v-btn>
-          </v-list-item>
-        </v-list>
-      </v-row>
+      <v-card-text>
+        <v-row>
+          <v-list v-for="time in timeTable" :key="time.id">
+            <v-list-item>
+              <v-btn v-if="freeSlot.includes(time.id)" color="primary">
+                {{ time.start }} - {{ time.end }}
+              </v-btn>
+            </v-list-item>
+          </v-list>
+        </v-row>
+      </v-card-text>
     </v-card>
     <v-card v-else>
       <v-card-title>Dnia {{ picker }} - {{ test }}</v-card-title>
@@ -174,7 +176,7 @@ export default {
           )
           console.log('wolne sloty: ', this.freeSlot)
         } catch (err) {
-          console.error(err)
+          console.warn('No slots data: ', err)
           this.test = response.data.message
         }
       }
