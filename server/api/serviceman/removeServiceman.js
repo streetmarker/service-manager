@@ -1,21 +1,20 @@
+// usuwanie svm, usera, timeslotów
 const express = require('express')
 const db = require('../../pgUtils')
 const router = express.Router()
 
 router.post('/', (req, res) => {
-  const { firmId } = req.body
+  const { svmId } = req.body
   db.query(
-    `SELECT se.id as svmId, se.qualifications, u.email, u.login FROM serviceman se
-    LEFT JOIN subcontractor su ON su.id = se.subcontractor_id
-    LEFT JOIN users u on u.id = se.users_id 
-    WHERE su.name = $1`, [firmId],
+    'CALL remove_svm($1, 0, \'\')', [svmId],
     (error, results) => {
       if (error) {
         return res.json(error)
       }
+      // console.log(results)
       res.json(results)
-    }
-  )
+      // res.status(200).json({ message: 'Logged in' });
+    })
 })
 
 module.exports = router

@@ -79,7 +79,11 @@
         <v-row>
           <v-list v-for="time in timeTable" :key="time.id">
             <v-list-item>
-              <v-btn v-if="freeSlot.includes(time.id)" color="primary">
+              <v-btn
+                v-if="freeSlot.includes(time.id)"
+                color="primary"
+                @click="saveSelectedSlot(time)"
+              >
                 {{ time.start }} - {{ time.end }}
               </v-btn>
             </v-list-item>
@@ -88,7 +92,16 @@
       </v-card-text>
     </v-card>
     <v-card v-else>
-      <v-card-title>Dnia {{ picker }} - {{ test }}</v-card-title>
+      <v-card-title>Dnia {{ picker }} - {{ msg }}</v-card-title>
+    </v-card>
+    <v-card v-if="selectedSlot">
+      <v-card-title>Wybrany slot czasowy:   <b> {{ selectedSlot }}</b></v-card-title>
+      <v-card-actions>
+        <v-btn color="success" @click="createFault">
+          Zarezerwój termin serwisu
+        </v-btn>
+      </v-card-actions>
+      <v-card-text>{{ resultMsg }}</v-card-text>
     </v-card>
   </div>
 </template>
@@ -102,11 +115,12 @@ dateTo.setDate(today.getDate() + 28)
 export default {
   name: 'ServiceManagerRequestForm',
   data: () => ({
+    selectedSlot: null,
     today,
     dateTo,
     picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
     valid: false,
-    description: 'test',
+    description: 'slotResponse',
     descriptionRule: [
       v => !!v || 'description is required',
       v => (v && v.length <= 500) || 'description must be less than 500 characters'
@@ -122,54 +136,59 @@ export default {
     checkbox: false,
     timeSlot_1: '',
     timeSlot_2: '',
-    timeSlots: ['7-9', '9-11', '11-13', '13-15', '15-17', '17-19', '19-21'], // do ogarnięcia tu i main grid po 2 h sloty
+    timeSlots: [],
+    timeSlotsNvp: [],
     timeTable: [{ id: 1, start: 7, end: 9 }, { id: 2, start: 9, end: 11 }, { id: 3, start: 11, end: 13 }, { id: 4, start: 13, end: 15 }, { id: 5, start: 15, end: 17 }, { id: 6, start: 17, end: 19 }, { id: 7, start: 19, end: 21 }], // { id: 8, start: 20, end: 22 }], { id: 9, start: 16, end: 17 }, { id: 10, start: 17, end: 18 }, { id: 11, start: 18, end: 19 }, { id: 12, start: 19, end: 20 }, { id: 13, start: 20, end: 21 }],
     faultTypes: [],
     selectedType: [],
     faultTypesNvp: [],
-    test: null,
-    freeSlot: []
+    slotResponse: null,
+    freeSlot: [],
+    msg: null,
+    resultMsg: null
   }),
   mounted () {
     this.getDictionaries()
   },
   methods: {
-    parseResponse () {
-
+    saveSelectedSlot (val) {
+      this.selectedSlot = val.start + '-' + val.end
     },
     async getDictionaries () {
       const response = await this.$axios.get('api/getTypeDict')
       const res = response.data.rows
       res.forEach((el) => {
         this.faultTypesNvp.push(el)
-        // this.selectedType.push(el.id)
         this.faultTypes.push(el.name)
       })
-      // this.faultTypes = response.data.rows
+      const response2 = await this.$axios.get('api/getSlotHour')
+      response2.data.rows.forEach((el) => {
+        this.timeSlotsNvp.push(el)
+        this.timeSlots.push(el.value)
+      })
+      console.log('res: ', response2)
+      console.log('TS : ', this.timeSlots)
     },
-    async send () {
+    async send () { // qualification handling on api
       if (this.$refs.form.validate()) {
         const nvp = this.faultTypesNvp
         const type = nvp.filter(nvp => nvp.name === this.selectedType)
         // eslint-disable-next-line no-console
         // console.log(type[0])
-        // const slot1 = this.timeSlots.indexOf(this.timeSlot_1) + 1
+        const slot1 = this.timeSlots.indexOf(this.timeSlot_1) + 1
         // const slot2 = this.timeSlots.indexOf(this.timeSlot_2) + 1
         const body = {
-          // clientId: this.$store.state.customer.customer.id, // dopiero przy rezerwacji
           clientLocation: this.$store.state.customer.customer.coordinates,
           city: this.$store.state.customer.customer.city,
-          // description: this  .description,
           typeId: type[0].id,
-          date: this.picker
-          // timeSlot_1: slot1, // obsługa na razie na froncie
+          date: this.picker,
+          timeSlot_1: slot1
           // timeSlot_2: slot2
         }
         const response = await this.$axios.post('api/findSlot', body)
-        this.test = null
-        this.test = response
+        this.slotResponse = response.data[0]
         this.freeSlot = []
-        const arr = [0, 1, 2, 3, 4, 5, 6]
+        const arr = [1, 2, 3, 4, 5, 6, 7]
         try {
           this.freeSlot = arr.filter(el =>
             !response.data[0].reserved.includes(el)
@@ -177,15 +196,33 @@ export default {
           console.log('wolne sloty: ', this.freeSlot)
         } catch (err) {
           console.warn('No slots data: ', err)
-          this.test = response.data.message
+          this.msg = response.data.message
         }
       }
     },
-    reset () {
-      this.$refs.form.reset()
-    },
-    resetValidation () {
-      this.$refs.form.resetValidation()
+    async createFault () {
+      let faultTypeId = 0
+      // eslint-disable-next-line prefer-const
+      let slotHourId = 0
+      this.faultTypesNvp.forEach((el) => {
+        if (el.name === this.selectedType) {
+          faultTypeId = el.id
+        }
+      })
+      this.timeSlotsNvp.forEach((el) => {
+        if (el.value === this.selectedSlot) {
+          slotHourId = el.id
+        }
+      })
+      const body = {
+        customerId: this.$store.state.customer.customer.id,
+        description: this.description,
+        faultTypeId,
+        timeSlotId: this.slotResponse.slotid,
+        slotHourId
+      }
+      const response = await this.$axios.post('api/createFault', body)
+      this.resultMsg = response.data.message
     }
   }
 }

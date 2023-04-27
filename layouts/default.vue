@@ -11,6 +11,9 @@
         <v-btn to="/customerForm">
           TEST customerForm
         </v-btn>
+        <v-btn to="/mobileApp">
+          TEST mobile
+        </v-btn>
       </v-toolbar-title>
       <v-spacer />
       <!-- <v-btn
@@ -88,7 +91,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :absolute="!fixed" app>
+    <v-footer app>
       <span>&copy; {{ new Date().getFullYear() }} Service Panel</span>
     </v-footer>
   </v-app>
@@ -103,7 +106,7 @@ export default {
     return {
       clipped: false,
       drawer: false,
-      fixed: false,
+      // fixed: false,
       items: [
         {
           icon: 'mdi-circle',

@@ -9,8 +9,11 @@
           <h1 v-if="type === 'customer'">
             Client Login
           </h1>
+          <h1 v-if="type === 'svm'">
+            Serviceman Login
+          </h1>
           <v-text-field
-            v-if="type === 'user'"
+            v-if="type === 'user' || type === 'svm'"
             v-model="login"
             :rules="rules"
             label="Login"
@@ -87,7 +90,7 @@ export default {
       this.errorMsg = ''
       this.successMsg = ''
       let ident = null
-      if (this.type === 'user') {
+      if (this.type === 'user' || this.type === 'svm') {
         ident = this.login
       } else if (this.type === 'customer') {
         ident = Number(this.customerId)
@@ -97,7 +100,7 @@ export default {
         password: this.password
       }
       try {
-        if (this.type === 'user') {
+        if (this.type === 'user' || this.type === 'svm') {
           this.fetchUser(this.login) // zapis do store
           this.fetchToken(userData) // init token w store
         } else if (this.type === 'customer') {
@@ -105,7 +108,7 @@ export default {
           this.fetchTokenCustomer(userData) // init token w store
         }
         setTimeout(() => {
-          if (this.type === 'user') {
+          if (this.type === 'user' || this.type === 'svm') {
             this.token = this.$store.state.user.token
             this.$store.state.user.token.length === 0
               ? (this.errorMsg = 'Wrong login or password')

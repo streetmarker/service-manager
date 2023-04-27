@@ -11,9 +11,9 @@
       <br>
       <v-row justify="center" align="center">
         <v-col cols="12" sm="8" md="6">
-          TU BĘDZIE LISTA ZLECEŃ
+          <FaultsList />
           <br>
-          <AddCustomer />
+          <!-- <AddCustomer /> -->
         </v-col>
       </v-row>
     </div>
@@ -22,15 +22,17 @@
 
 <script>
 import LoginComponent from '~/components/LoginComponent.vue'
+import FaultsList from '~/components/FaultsList.vue'
 import MainGrid from '~/components/MainGrid.vue'
-import AddCustomer from '~/components/AddCustomer.vue'
+// import AddCustomer from '~/components/AddCustomer.vue'
 
 export default {
   name: 'IndexPage',
   components: {
     LoginComponent,
-    MainGrid,
-    AddCustomer
+    FaultsList,
+    MainGrid
+    // AddCustomer
   }
 }
 </script>

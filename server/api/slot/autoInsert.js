@@ -14,16 +14,19 @@ const db = require('../../pgUtils')
 async function getFirms () {
   const result = await db.query(
     `SELECT su.id as subId, se.id as svmId FROM Subcontractor su
-    LEFT JOIN serviceman se on se.subcontractor_id = su.id`
+    RIGHT JOIN serviceman se on se.subcontractor_id = su.id`
   )
   return result.rows
 }
 getFirms()
   .then((result) => {
     // console.log(result)
+    const year = new Date().getFullYear()
+    const day = new Date().getMonth() + 1
+    const monthDays = new Date(year, day, 0).getDate()
     result.forEach((element) => {
       console.log(element)
-      for (let i = 1; i < 2; i++) {
+      for (let i = 1; i <= monthDays; i++) {
         // Calculate the date for the current iteration
         const date = new Date()
         date.setDate(date.getDate() + i)
@@ -34,6 +37,7 @@ getFirms()
           'insert into timeslot (serviceman_id, subcontractor_id, reserved, "date") values ($1, $2, \'{}\', $3)',
           [element.svmid, element.subid, date]
         )
+        console.log(date)
       }
     })
   })

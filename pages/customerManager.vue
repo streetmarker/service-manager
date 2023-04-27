@@ -1,53 +1,39 @@
 <template>
   <div>
-    <v-select
-      v-model="firm"
-      label="Wybór podwykonawcy"
-      :items="firms"
-    />
-    <v-card v-if="serviceman.length>0">
-      <v-card-title>Lokalizacja firmy</v-card-title>
-      <v-card-text>
-        {{ serviceman[0].display_name }}
-      </v-card-text>
-    </v-card>
-    <br>
+    <v-col>
+      <v-card>
+        <v-card-title>
+          <v-btn color="primary" @click="modal1 = !modal1">
+            Dodaj klienta
+          </v-btn>
+          <v-spacer />
+          <v-btn @click="getCustomers()">
+            odświerz
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </v-card-title>
+      </v-card>
+    </v-col>
     <v-data-table
       :headers="headers"
-      :items="serviceman"
+      :items="customers"
     />
     <br>
-    <v-btn @click="getServiceman(firm)">
-      <v-icon>mdi-refresh</v-icon>
-    </v-btn>
-    <AddSubcontractorControl :show="modal1" />
-    <AddServicemanControl :show="modal2" :firm="firmData" />
     <v-row>
-      <v-col>
-        <v-btn color="primary" @click="modal1 = !modal1">
-          Dodaj podwykonawcę
-        </v-btn>
-      </v-col>
-      <div v-if="firm">
-        <v-col>
-          <v-btn color="primary" @click="modal2 = !modal2">
-            Dodaj Serwisanta do firmy
-          </v-btn>
-        </v-col>
-      </div>
+      <AddCustomerControl :show="modal1" />
     </v-row>
   </div>
 </template>
 
 <script>
-import AddServicemanControl from '~/components/AddServicemanControl.vue'
-import AddSubcontractorControl from '~/components/AddSubcontractorControl.vue'
+import AddCustomerControl from './../components/AddCustomerControl.vue'
 
 export default {
-  name: 'ServiceManagerSubcontractorManager',
-  components: { AddSubcontractorControl, AddServicemanControl },
+  name: 'ServiceManagerCustomerManager',
+  components: { AddCustomerControl },
   data () {
     return {
+      customers: [],
       firmData: {
         id: 0,
         name: ''
@@ -58,68 +44,28 @@ export default {
       firms: [],
       firmsNvp: [],
       serviceman: [],
-      headers: [
-        {
-          text: 'Technician',
-          align: 'start',
-          sortable: false,
-          value: 'login'
-        },
-        {
-          text: 'Qualifications',
-          align: 'start',
-          sortable: false,
-          value: 'qualifications'
-        },
-        {
-          text: 'City',
-          align: 'start',
-          sortable: false,
-          value: 'city'
-        },
-        {
-          text: 'Email',
-          align: 'start',
-          sortable: false,
-          value: 'email'
-        }
-      ]
+      headers: []
     }
   },
   watch: {
-    firm (val) {
-      this.getServiceman(val)
-      const firmObj = this.firmsNvp.filter(nvp => nvp.name === this.firm)
-      this.firmData.id = firmObj[0].id
-      this.firmData.name = val
-    }
   },
   mounted () {
-    this.getFirms()
+    this.getCustomers()
   },
   methods: {
-    async getServiceman (firmId) {
-      const body = {
-        firmId
-      }
-      // console.log(firmId)
-      const response = await this.$axios.post('api/getServiceman', body)
+    async getCustomers () {
+      const response = await this.$axios.get('api/getCustomers')
       try {
-        // console.log(response)
-        this.serviceman = response.data.rows
+        console.log(response)
+        this.customers = response.data.rows
+        if (this.headers.length === 0) {
+          response.data.fields.forEach((el) => {
+            this.headers.push({ text: el.name, value: el.name })
+          })
+        }
       } catch (err) {
-        // eslint-disable-next-line no-console
         console.log(err)
       }
-    },
-    async getFirms () {
-      const response = await this.$axios.get('api/getFirms')
-      // console.log(response)
-      const res = response.data.rows
-      res.forEach((el) => {
-        this.firmsNvp.push(el)
-        this.firms.push(el.name)
-      })
     }
   }
 }

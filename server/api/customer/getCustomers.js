@@ -4,15 +4,16 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
   db.query(
-    `SELECT s.id, s.location_id, s.name, s.city, l.display_name FROM Subcontractor s
-    LEFT JOIN Location l ON s.location_ID = l.id`,
+    'SELECT * FROM Customer',
     (error, results) => {
       if (error) {
+        console.log('Get customers error: ', error)
         return res.json(error)
       }
       res.json(results)
     }
   )
+  // logic for reserving slot
 })
 
 module.exports = router

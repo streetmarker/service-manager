@@ -1,41 +1,173 @@
+<!-- eslint-disable vue/v-slot-style -->
+<!-- eslint-disable vue/valid-v-slot -->
 <template>
   <div>
+    <v-dialog
+      v-model="dialog"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title>
+          <!-- <span class="text-h5">{{ formTitle }}</span> -->
+        </v-card-title>
+
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  v-model="editedItem.login"
+                  label="Dessert name"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  label="Calories"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  label="Fat (g)"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  label="Carbs (g)"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  label="Protein (g)"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="close"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="save"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5">
+          Are you sure you want to delete this item?
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="blue darken-1" text @click="closeDelete">
+            Cancel
+          </v-btn>
+          <v-btn color="blue darken-1" text @click="deleteItemConfirm">
+            OK
+          </v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!--  -->
+    <v-col>
+      <v-card>
+        <v-card-title>
+          <v-btn color="primary" @click="modal1 = !modal1">
+            Dodaj podwykonawcę
+          </v-btn>
+          <v-spacer />
+
+          <v-btn @click="getServiceman(firm)">
+            odświerz
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+          <v-spacer />
+
+          <div v-if="firm">
+            <v-btn color="primary" @click="modal2 = !modal2">
+              Dodaj Serwisanta do firmy
+            </v-btn>
+          </div>
+        </v-card-title>
+      </v-card>
+    </v-col>
     <v-select
       v-model="firm"
       label="Wybór podwykonawcy"
       :items="firms"
     />
+
     <v-card v-if="serviceman.length>0">
       <v-card-title>Lokalizacja firmy</v-card-title>
       <v-card-text>
-        {{ serviceman[0].display_name }}
+        {{ locationName }}
       </v-card-text>
     </v-card>
     <br>
+
     <v-data-table
       :headers="headers"
       :items="serviceman"
-    />
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="editItem(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          small
+          @click="deleteItem(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
+      <template #no-data>
+        <v-btn
+          color="primary"
+        >
+          Wybierz wykonawcę powyżej
+        </v-btn>
+      </template>
+    </v-data-table>
     <br>
-    <v-btn @click="getServiceman(firm)">
-      <v-icon>mdi-refresh</v-icon>
-    </v-btn>
+
     <AddSubcontractorControl :show="modal1" />
     <AddServicemanControl :show="modal2" :firm="firmData" />
-    <v-row>
-      <v-col>
-        <v-btn color="primary" @click="modal1 = !modal1">
-          Dodaj podwykonawcę
-        </v-btn>
-      </v-col>
-      <div v-if="firm">
-        <v-col>
-          <v-btn color="primary" @click="modal2 = !modal2">
-            Dodaj Serwisanta do firmy
-          </v-btn>
-        </v-col>
-      </div>
-    </v-row>
   </div>
 </template>
 
@@ -58,6 +190,7 @@ export default {
       firms: [],
       firmsNvp: [],
       serviceman: [],
+      locationName: '',
       headers: [
         {
           text: 'Technician',
@@ -72,26 +205,34 @@ export default {
           value: 'qualifications'
         },
         {
-          text: 'City',
-          align: 'start',
-          sortable: false,
-          value: 'city'
-        },
-        {
           text: 'Email',
           align: 'start',
           sortable: false,
           value: 'email'
-        }
-      ]
+        },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ],
+      // dialogs
+      editedItem: {},
+      editedIndex: -1,
+      dialog: false,
+      dialogDelete: false
     }
   },
   watch: {
     firm (val) {
       this.getServiceman(val)
+      console.log('firm Nvp: ', this.firmsNvp)
       const firmObj = this.firmsNvp.filter(nvp => nvp.name === this.firm)
+      this.locationName = firmObj[0].display_name
       this.firmData.id = firmObj[0].id
       this.firmData.name = val
+    },
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
     }
   },
   mounted () {
@@ -120,6 +261,54 @@ export default {
         this.firmsNvp.push(el)
         this.firms.push(el.name)
       })
+    },
+    // modals
+    editItem (item) {
+      // this.editedIndex = this.desserts.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
+    },
+
+    async deleteItem (item) {
+      // console.log(item)
+      const body = {
+        svmId: item.svmid
+      }
+      const response = await this.$axios.post('api/removeServiceman', body)
+      console.log('delete svm: ', response)
+      // this.editedIndex = this.desserts.indexOf(item)
+      // this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+
+    deleteItemConfirm () {
+      // this.desserts.splice(this.editedIndex, 1)
+      this.closeDelete()
+    },
+
+    close () {
+      this.dialog = false
+      // this.$nextTick(() => {
+      //   this.editedItem = Object.assign({}, this.defaultItem)
+      //   this.editedIndex = -1
+      // })
+    },
+
+    closeDelete () {
+      this.dialogDelete = false
+      // this.$nextTick(() => {
+      //   this.editedItem = Object.assign({}, this.defaultItem)
+      //   this.editedIndex = -1
+      // })
+    },
+
+    save () {
+      // if (this.editedIndex > -1) {
+      //   Object.assign(this.desserts[this.editedIndex], this.editedItem)
+      // } else {
+      //   this.desserts.push(this.editedItem)
+      // }
+      this.close()
     }
   }
 }

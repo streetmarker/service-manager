@@ -4,7 +4,7 @@
     persistent
   >
     <v-card>
-      <v-card-title>Dodawanie technika do firmy {{ firm.name }}</v-card-title>
+      <v-card-title>Dodawanie technika do firmy {{ firm }}</v-card-title>
       <v-card-text>
         <v-form
           ref="form"
@@ -97,6 +97,7 @@ export default {
   },
   mounted () {
     this.getDictionaries()
+    console.log(this.firm)
   },
   methods: {
     handleLocationAdded (value) {
@@ -134,9 +135,17 @@ export default {
           login: this.login,
           email: this.email
         }
-        const response = await this.$axios.post('api/addServiceman', data)
+        const response = await this.$axios.post('api/addServiceman', data) // merge
         console.log('serviceman add res: ', response)
         this.msg = response.status
+        // const data2 = {
+        //   subcontractorId: this.firm.id,
+        //   qualifications: faultIds,
+        //   login: this.login,
+        //   email: this.email
+        // }
+        // const response2 = await this.$axios.post('api/autoInsertNew', data2) // merge
+        // console.log('serviceman add slot res: ', response2)
       }
     }
   }

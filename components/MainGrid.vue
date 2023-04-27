@@ -33,6 +33,9 @@
           no-title
         />
       </v-menu>
+      <v-btn @click="getSlots(firm)">
+        refresh
+      </v-btn>
     </v-card-title>
     <template>
       <div>
@@ -57,9 +60,9 @@
           <v-list v-for="timeSlot in timeSlots" :key="timeSlot.id">
             <v-list-item v-if="new Date(timeSlot.date).toISOString().slice(0,10) == dateSelect">
               <v-row>
-                <div class="name">
+                <v-col max-width="10%" class="name">
                   {{ timeSlot.username }}
-                </div>
+                </v-col>
                 <v-col v-for="time in timeTable" :key="time.id">
                   <div v-if="!timeSlot.reserved.includes(time.id)">
                     <v-btn>
