@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
       'insert into timeslot (serviceman_id, subcontractor_id, reserved, "date") values ($1, $2, \'{}\', $3)',
       [res2.rows[0].id, subcontractorId, date])
   }
-  res.send(200)
+  res.sendStatus(200)
 })
 
 module.exports = router

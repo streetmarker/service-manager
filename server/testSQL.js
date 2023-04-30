@@ -9,16 +9,17 @@ async function getFirms () {
   console.log('S', s, 'E', e)
   // const arr =[3, 4]
   const result = await db.query(
-    `select
-    * from timeslot limit 1`)
+    `SELECT * FROM users
+    WHERE login = $1 AND "password" = $2`, ['admin', 'admin1'])
   return result.rows
 }
 getFirms()
   .then((result) => {
+    console.log(result)
     // const days = []
-    const year = new Date().getFullYear()
-    const day = new Date().getMonth() + 1
-    const today = new Date(year, day, 0).getDate()
+    // const year = new Date().getFullYear()
+    // const day = new Date().getMonth() + 1
+    // const today = new Date(year, day, 0).getDate()
     // for (let i = 1; i < 31; i++) {
     //   if ((today + i + 1) !== 1) {
     //     days.push(today + i)
@@ -28,8 +29,8 @@ getFirms()
     //   }
     // }
     // result[0].reserved.push(3)
-    console.log(today)
-    console.log(day, year)
+    // console.log(today)
+    // console.log(day, year)
   })
 // `SELECT reserved FROM TimeSlot t
 // WHERE t.id = $1`, [69]

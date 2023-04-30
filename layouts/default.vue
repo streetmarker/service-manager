@@ -1,9 +1,8 @@
 <template>
-  <v-app dark>
+  <v-app>
     <!-- v-if="Object.keys($store.state.user.user).length == 0" -->
     <!-- nie działa kolor dla customera -->
-    <v-app-bar v-if="Object.keys($store.state.user.user).length == 0" :clipped-left="clipped" fixed app>
-      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> -->
+    <v-app-bar v-if="$store.state.user.token.length == 0" :clipped-left="clipped" fixed app>
       <v-toolbar-title>
         <v-btn to="/">
           {{ title }}
@@ -16,28 +15,15 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
-      <!-- <v-btn
-        v-if="!$store.state.user.token.length > 0"
-        :to="login.to"
-        plain
-      >
-        <v-icon>{{ login.icon }}</v-icon>{{ login.title }}
-      </v-btn> -->
-      <!-- <v-btn
-        v-if="$store.state.user.token.length > 0"
-        to="/userPanel"
-        plain
-      >
-        <v-icon>{{ login.icon }}</v-icon>Moje konto
-      </v-btn> -->
       <v-btn
         v-if="$store.state.user.token.length > 0"
-        plain
+        rounded
         @click="logout"
       >
         {{ $store.state.user.user.firstname }} | Wyloguj się
       </v-btn>
     </v-app-bar>
+    <!--  -->
     <v-app-bar v-else color="primary" :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
@@ -46,28 +32,16 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
-      <!-- <v-btn
-        v-if="!$store.state.user.token.length > 0"
-        :to="login.to"
-        plain
-      >
-        <v-icon>{{ login.icon }}</v-icon>{{ login.title }}
-      </v-btn> -->
-      <!-- <v-btn
-        v-if="$store.state.user.token.length > 0"
-        to="/userPanel"
-        plain
-      >
-        <v-icon>{{ login.icon }}</v-icon>Moje konto
-      </v-btn> -->
       <v-btn
         v-if="$store.state.user.token.length > 0"
         plain
+        data-cy="logoff"
         @click="logout"
       >
         {{ $store.state.user.user.login }} | Wyloguj się
       </v-btn>
     </v-app-bar>
+    <!--  -->
     <v-main>
       <v-container>
         <Nuxt />

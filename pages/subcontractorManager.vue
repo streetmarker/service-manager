@@ -101,34 +101,40 @@
       </v-card>
     </v-dialog>
     <!--  -->
-    <v-col>
-      <v-card>
-        <v-card-title>
-          <v-btn color="primary" @click="modal1 = !modal1">
-            Dodaj podwykonawcę
+    <!-- <v-col> -->
+    <v-card>
+      <v-card-title>
+        <v-btn color="primary" @click="modal1 = !modal1">
+          Dodaj podwykonawcę
+        </v-btn>
+        <v-spacer />
+
+        <v-btn @click="getServiceman(firm)">
+          odświerz
+          <v-icon>mdi-refresh</v-icon>
+        </v-btn>
+        <v-spacer />
+
+        <div v-if="firm">
+          <v-btn data-cy="addSvmBtn" color="primary" @click="modal2 = !modal2">
+            Dodaj Serwisanta do firmy
           </v-btn>
-          <v-spacer />
-
-          <v-btn @click="getServiceman(firm)">
-            odświerz
-            <v-icon>mdi-refresh</v-icon>
-          </v-btn>
-          <v-spacer />
-
-          <div v-if="firm">
-            <v-btn color="primary" @click="modal2 = !modal2">
-              Dodaj Serwisanta do firmy
-            </v-btn>
-          </div>
-        </v-card-title>
-      </v-card>
-    </v-col>
-    <v-select
-      v-model="firm"
-      label="Wybór podwykonawcy"
-      :items="firms"
-    />
-
+        </div>
+      </v-card-title>
+    </v-card>
+    <br>
+    <!-- </v-col> -->
+    <v-card>
+      <v-card-text>
+        <v-select
+          v-model="firm"
+          label="Wybór podwykonawcy"
+          :items="firms"
+          data-cy="firmSelect"
+        />
+      </v-card-text>
+    </v-card>
+    <br>
     <v-card v-if="serviceman.length>0">
       <v-card-title>Lokalizacja firmy</v-card-title>
       <v-card-text>

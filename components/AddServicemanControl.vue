@@ -4,7 +4,7 @@
     persistent
   >
     <v-card>
-      <v-card-title>Dodawanie technika do firmy {{ firm }}</v-card-title>
+      <v-card-title>Dodawanie technika do firmy {{ firm.name }}</v-card-title>
       <v-card-text>
         <v-form
           ref="form"
@@ -16,12 +16,14 @@
             :rules="rule"
             label="Nazwa domenowa (format imie.nazwisko)"
             required
+            data-cy="svmLogin"
           />
           <v-text-field
             v-model="email"
             :rules="rule"
             label="Email"
             required
+            data-cy="svmEmail"
           />
           <v-select
             v-model="selectedType"
@@ -30,12 +32,14 @@
             label="Kwalifikacje"
             multiple
             required
+            data-cy="svmQalifications"
           />
           <v-card-actions>
             <v-btn
               :disabled="!valid"
               color="primary"
               class="mr-4"
+              data-cy="saveAddSvm"
               @click="send"
             >
               Zapisz dane
@@ -43,6 +47,7 @@
             <v-btn
               color="error"
               class="mr-4"
+              data-cy="exitAddSvm"
               @click="showIn = !showIn"
             >
               Zamknij okno

@@ -1,7 +1,11 @@
 export default {
-  async fetchCustomer ({ commit }, id) {
-    const response = await this.$axios.get(`/api/customerDetails/${id}`)
-    commit('setCustomer', response.data.rows[0])
+  async fetchCustomer ({ commit }, data) {
+    try {
+      const response = await this.$axios.get(`/api/customerDetails/${data.ident}`)
+      commit('setCustomer', response.data.rows[0])
+    } catch (error) {
+      console.log(error)
+    }
   },
   logoutAction ({ commit }) {
     commit('logoutCustomer')

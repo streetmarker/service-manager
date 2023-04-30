@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
-      <v-card v-if="!$store.state.user.token.length>0" class="logo py-4 d-flex justify-center">
+      <v-card class="logo py-4 d-flex justify-center">
         <v-form @submit.prevent>
           <h1 v-if="type === 'user'">
             Staff Login
@@ -17,24 +17,28 @@
             v-model="login"
             :rules="rules"
             label="Login"
+            data-cy="login"
           />
           <v-text-field
             v-else-if="type === 'customer'"
             v-model="customerId"
             :rules="rules"
             label="ID"
+            data-cy="login"
           />
           <v-text-field
             v-model="password"
             type="password"
             :rules="rules"
             label="Password"
+            data-cy="password"
           />
           <br>
           <v-btn
             type="submit"
             block
             class="mt-2"
+            data-cy="submit"
             @click="logIn"
           >
             Log In
@@ -61,8 +65,8 @@ export default {
   },
   data: () => ({
     customerId: null,
-    login: 'admin', // test
-    password: 'admin', // test
+    login: '',
+    password: '',
     rules: [
       (value) => {
         if (value) { return true }
@@ -101,11 +105,11 @@ export default {
       }
       try {
         if (this.type === 'user' || this.type === 'svm') {
-          this.fetchUser(this.login) // zapis do store
           this.fetchToken(userData) // init token w store
+          this.fetchUser(userData) // zapis do store
         } else if (this.type === 'customer') {
-          this.fetchCustomer(this.customerId) // zapis do store
           this.fetchTokenCustomer(userData) // init token w store
+          this.fetchCustomer(userData) // zapis do store
         }
         setTimeout(() => {
           if (this.type === 'user' || this.type === 'svm') {

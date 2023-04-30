@@ -5,8 +5,8 @@ const router = express.Router()
 router.post('/', (req, res) => {
   const { svmId, subcontractorId } = req.body
   const year = new Date().getFullYear()
-  const day = new Date().getMonth() + 1
-  const monthDays = new Date(year, day, 0).getDate()
+  const month = new Date().getMonth() + 1
+  const monthDays = new Date(year, month, 0).getDate()
   const daysLeft = monthDays - new Date().getDate()
   for (let i = 1; i <= daysLeft; i++) {
     // Calculate the date for the current iteration

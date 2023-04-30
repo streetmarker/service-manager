@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-if="Object.keys($store.state.user.user).length == 0" justify="center" align="center">
+    <v-row v-if="$store.state.user.token.length == 0" justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
         <LoginComponent />
         <br>
@@ -9,9 +9,9 @@
     <div v-else>
       <MainGrid />
       <br>
+      <FaultsList />
       <v-row justify="center" align="center">
         <v-col cols="12" sm="8" md="6">
-          <FaultsList />
           <br>
           <!-- <AddCustomer /> -->
         </v-col>

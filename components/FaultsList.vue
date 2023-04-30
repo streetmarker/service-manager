@@ -11,57 +11,79 @@
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
       </v-card-title>
-    </v-card>
-    <v-data-table
-      :headers="headers"
-      :items="faultsList"
-    >
-      <template v-slot:item.details="{ item }">
-        <v-btn
-          icon
-          rounded
-          @click="showDetails(item)"
+      <v-card-text>
+        <v-data-table
+          :headers="headers"
+          :items="faultsList"
+          :page.sync="page"
+          :items-per-page="itemsPerPage"
+          hide-default-footer
+          class="elevation-1"
+          @page-count="pageCount = $event"
         >
-          <v-icon>mdi-information</v-icon>
-        </v-btn>
-      </template>
-      <template v-slot:item.isactive="{ item }">
-        <div v-if="!!item">
-          <v-chip color="success" outlined>
-            AKTYWNA
-          </v-chip>
+          <template v-slot:item.actions="{ item }">
+            <v-btn
+              @click="showActions(item)"
+            >
+              <b>AKCJE</b>
+            </v-btn>
+          </template>
+          <template v-slot:item.details="{ item }">
+            <v-btn
+              icon
+              rounded
+              @click="showDetails(item)"
+            >
+              <v-icon>mdi-information</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:item.isactive="{ item }">
+            <div v-if="!!item">
+              <v-chip color="success" outlined>
+                AKTYWNA
+              </v-chip>
+            </div>
+            <div v-else>
+              <v-chip rounded color="error" outlined>
+                ZAKOŃCZONA
+              </v-chip>
+            </div>
+          </template>
+        </v-data-table>
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="page"
+            :length="pageCount"
+          />
         </div>
-        <div v-else>
-          <v-chip rounded color="error" outlined>
-            ZAKOŃCZONA
-          </v-chip>
-        </div>
-      </template>
-    </v-data-table>
-    <v-pagination v-model="page" :length="pages" @input="updatePage" />
+      </v-card-text>
+    </v-card>
+    <FaultDetailsControl :show="modal" :fault="faultData" @open="handleModal" />
   </div>
 </template>
 
 <script>
+import FaultDetailsControl from './FaultDetailsControl'
+
 export default {
   name: 'ServiceManagerFaultsList',
+  components: { FaultDetailsControl },
 
   data () {
     return {
+      modal: false,
+      faultData: {},
       page: 1,
-      itemsPerPage: 5,
+      pageCount: 0,
+      itemsPerPage: 10,
       faultsList: [],
       headers: [
-        // comments
-        // customer_id
-        // description
-        // faultstatus_id
-        // faulttype_id
-        // id
-        // isactive
-        // requestdate
-        // slothour_id
-        // timeslot_id
+        {
+          // text: '',
+          align: 'start',
+          sortable: false,
+          value: 'actions'
+        },
         {
           text: 'Szczegóły',
           align: 'start',
@@ -75,19 +97,24 @@ export default {
           value: 'id'
         },
         {
-          text: 'Data zgłoszenia',
-          align: 'start',
-          value: 'requestdate'
-        },
-        {
           text: 'Data realizacji',
           align: 'start',
           value: 'date'
         },
         {
+          text: 'Przydzielona firma',
+          align: 'start',
+          value: 'name'
+        },
+        {
           text: 'Status ogólny',
           align: 'start',
           value: 'isactive'
+        },
+        {
+          text: 'Miasto',
+          align: 'start',
+          value: 'city'
         }
       ]
     }
@@ -105,6 +132,11 @@ export default {
 
   methods: {
     showDetails (item) {
+      this.faultData = Object.assign({}, item)
+      this.modal = true
+      console.log(item)
+    },
+    showActions (item) {
       console.log(item)
     },
     async getFaults () {
@@ -112,12 +144,29 @@ export default {
       console.log(response)
       try {
         this.faultsList = response.data.rows
+        // if (this.headers.length === 0) {
+        //   this.headers.push({
+        //   // text: '',
+        //     align: 'start',
+        //     sortable: false,
+        //     value: 'actions'
+        //   },
+        //   {
+        //     text: 'Szczegóły',
+        //     align: 'start',
+        //     sortable: false,
+        //     value: 'details'
+        //   })
+        //   response.data.fields.forEach((el) => {
+        //     this.headers.push({ text: el.name, align: 'start', sortable: false, value: el.name })
+        //   })
+        // }
       } catch (err) {
         console.log(err)
       }
     },
-    updatePage (page) {
-      this.page = page
+    handleModal (value) {
+      this.modal = value
     }
   }
 }

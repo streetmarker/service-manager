@@ -42,21 +42,17 @@
         <v-row
           justify="center"
           align="center"
-        >
-          <v-subheader>Offset Top</v-subheader>
-          {{ offsetTop }}
-        </v-row>
+        />
         <v-container
           id="scroll-target"
-          style="max-height: 400px"
+          style="max-height: 350px"
           class="overflow-y-auto"
         >
-          <!-- <v-row
+          <v-row
             v-scroll:#scroll-target="onScroll"
             align="center"
             justify="center"
-            style="height: 1000px"
-          /> -->
+          />
           <v-list v-for="timeSlot in timeSlots" :key="timeSlot.id">
             <v-list-item v-if="new Date(timeSlot.date).toISOString().slice(0,10) == dateSelect">
               <v-row>

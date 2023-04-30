@@ -2,7 +2,7 @@
   <div>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
-        <LoginComponent v-if="Object.keys($store.state.customer.customer).length == 0" type="customer" />
+        <LoginComponent v-if="$store.state.customer.token.length == 0" type="customer" />
         <RequestForm v-else />
         <br>
       </v-col>
