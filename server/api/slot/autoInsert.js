@@ -32,8 +32,9 @@ getFirms()
         const date = new Date()
         date.setDate(date.getDate() + i)
 
-        // Format the date as a string in ISO format
-        // const isoDate = date.toISOString()
+        if (date.getDate() === 1) { // block adding slots for next month
+          break
+        }
         db.query(
           'insert into timeslot (serviceman_id, subcontractor_id, reserved, "date") values ($1, $2, \'{}\', $3)',
           [element.svmid, element.subid, date]

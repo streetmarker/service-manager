@@ -3,11 +3,11 @@ const db = require('../../pgUtils')
 const router = express.Router()
 
 router.post('/', async (req, res) => {
-  const { subcontractorId, qualifications, login, email } = req.body
+  const { subcontractorId, qualifications, login, email, roleId } = req.body
   console.log(req.body)
   const res1 = await db.query(
-    'INSERT INTO Users (Login, Email, Role_ID) VALUES ($1, $2, $3) RETURNING id',
-    [login, email, 3] // 3 technician role
+    'INSERT INTO Users (Login, password Email, Role_ID) VALUES ($1, t, $2, $3) RETURNING id',
+    [login, email, roleId]
   )
   console.log('svm add res: ', res1)
   const res2 = await db.query(

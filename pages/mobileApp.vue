@@ -3,11 +3,12 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title>Panel serwisanta</v-toolbar-title>
+      <v-spacer />
+      {{ $store.state.user.user.login }}
     </v-app-bar>
     <v-main>
-      <a href="/mobileFaultView">link</a>
-      <v-container v-if="Object.keys($store.state.user.user).length == 0">
-        <LoginComponent type="svm" />
+      <v-container v-if="$store.state.user.token.length === 0">
+        <LoginComponent type="svm" @logged="handleLogin" />
       </v-container>
       <v-container v-else>
         <v-card>
@@ -21,7 +22,7 @@
             Po kliknięciu w zlecenie szczegóły: klient, komentarze(możliwość dodania), możliwość zmiany statusu, możliwość szybkiego kontaktu z klientem
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" @click="buttonClicked">
+            <v-btn color="primary" @click="init">
               Click me!
             </v-btn>
           </v-card-actions>
@@ -38,7 +39,7 @@
         </v-card>
         <v-data-table
           :headers="headers"
-          :items="faultsList"
+          :items="modifiedFaultsList"
         >
           <template #item.details="{ item }">
             <v-btn
@@ -46,7 +47,10 @@
               rounded
               @click="showDetails(item)"
             >
-              <v-icon>mdi-information</v-icon>
+              <nuxt-link :to="'/faults/' + item.id">
+                <v-icon>mdi-play</v-icon>
+              </nuxt-link>
+              <!-- <a href="/mobileFaultView"></a> -->
             </v-btn>
           </template>
           <template #item.isactive="{ item }">
@@ -77,60 +81,89 @@ export default {
     return {
       faultsList: [],
       headers: [
-        // comments
-        // customer_id
-        // description
-        // faultstatus_id
-        // faulttype_id
-        // id
-        // isactive
-        // requestdate
-        // slothour_id
-        // timeslot_id
         {
-          text: 'Szczegóły',
+          text: 'Działania',
           align: 'start',
           sortable: false,
           value: 'details'
         },
         {
-          text: 'Id zlecenia',
+          text: 'Data i slot',
           align: 'start',
-          // sortable: false,
-          value: 'id'
+          value: 'date'
         },
         {
-          text: 'Data zgłoszenia',
+          text: 'Adres',
           align: 'start',
-          value: 'requestdate'
-        },
-        {
-          text: 'Status ogólny',
-          align: 'start',
-          value: 'isactive'
+          value: 'display_name'
         }
-      ]
+      ],
+      hoursDict: [],
+      modifiedFaultsList: [],
+      logged: false
     }
   },
-  mounted () {
-    this.getFaults()
+  watch: {
+    logged () {
+      this.init()
+      console.log('logged')
+    }
   },
-
   methods: {
     showDetails (item) {
       console.log(item)
     },
-    async getFaults () {
-      const response = await this.$axios.get('api/getFaults')
-      console.log(response)
+    async getDictionaries () {
       try {
-        this.faultsList = response.data.rows
-      } catch (err) {
-        console.log(err)
+        const response = await this.$axios.get('api/getSlotHour')
+        const res = response.data.rows
+        this.hoursDict = res
+        console.log('hours dict', this.hoursDict)
+        console.log('lista faltów: ', this.faultsList)
+        this.faultsList.forEach((el) => {
+          const obj = this.hoursDict.find(obj => obj.id === el.slothour_id)
+          el.hour = obj.value
+        })
+        const arr = this.faultsList.map(item => ({
+          ...item,
+          date: item.date.substring(0, 10) + ' (' + item.hour + ')',
+          display_name: item.display_name.substring(0, 15) + '...'
+        }))
+        this.modifiedFaultsList = arr
+      } catch (er) {
+        console.log(er)
       }
     },
-    buttonClicked () {
-      alert('Button clicked!')
+    getFaults () {
+      setTimeout(async () => {
+        const userId = await this.$store.state.user.user.id
+        const body = {
+          svmId: userId
+        }
+        console.log('body', body)
+        const response = await this.$axios.post('api/getAssignedFaults', body)
+        console.log('getFaults')
+        try {
+          this.faultsList = response.data.rows
+        } catch (err) {
+          console.log(err)
+        }
+        console.log('gF:', this.faultsList)
+      }, 200)
+    },
+    init () {
+      try {
+        setTimeout(() => {
+          this.getDictionaries()
+        }, 500)
+        this.getFaults()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    handleLogin (value) {
+      this.logged = value
     }
   }
 }

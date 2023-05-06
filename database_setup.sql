@@ -100,6 +100,7 @@ VALUES
 INSERT INTO FaultStatus (Name, Result)
 VALUES 
   ('skutecznie', 'completed'),
+  ('w trakcie', 'inprogress'),
   ('przekazanie do innego działu', 'completed'),
   ('nieskutecznie', 'failed');
 
@@ -134,7 +135,7 @@ VALUES ('Anna Kowalska', 'password123', '555-123-456', 'anna.kowalska@example.co
 
 -- VIEWS
 CREATE OR REPLACE VIEW user_details AS
-SELECT u.login, u.email, r.id AS roleId, r.name AS roleName, r.is_admin AS isAdmin FROM Users u
+SELECT u.id, u.login, u.email, r.id AS roleId, r.name AS roleName, r.is_admin AS isAdmin FROM Users u
 LEFT JOIN Roles r ON u.Role_ID = r.ID;
 
 CREATE OR REPLACE VIEW customer_details as
@@ -148,8 +149,26 @@ left join serviceman s on s.id = t.serviceman_id
 left join subcontractor s2 on t.subcontractor_id = s2.id 
 left join users u on u.id = s.users_id ;
 
+-- FUNCTIONS
 
--- POCEDURES
+CREATE OR REPLACE FUNCTION get_comments_by_id(fault_id integer)
+  RETURNS TABLE (id integer, login text, value text)
+  AS $$
+  BEGIN
+    RETURN QUERY
+      select
+      f.id ,
+      comment.login AS login,
+      comment.value AS value
+      FROM
+        fault f,
+        unnest(f.comments) AS comment
+      WHERE
+        f.id = fault_id;
+  END;
+  $$ LANGUAGE plpgsql;
+  
+-- PROCEDURES
 CREATE OR REPLACE PROCEDURE remove_svm (svm_id INT, OUT userId INT)
     LANGUAGE plpgsql
     AS $$
@@ -161,3 +180,45 @@ CREATE OR REPLACE PROCEDURE remove_svm (svm_id INT, OUT userId INT)
     END;
     $$;
 -- nie można usunąć jak ma zlecenia dlatego można opracować system archiwizacji zleceń tak aby czyścić tabele fault i np. pytać czy usunąć auto po archiwizacji tabeli
+
+-- TRIGGERS
+CREATE OR REPLACE FUNCTION deactivateFault()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT Result FROM FaultStatus WHERE ID = NEW.FaultStatus_ID) = 'completed' THEN
+    UPDATE Fault SET IsActive = false WHERE ID = NEW.ID;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER t_deactivateFault
+AFTER UPDATE ON Fault
+FOR EACH ROW
+WHEN (OLD.FaultStatus_ID IS DISTINCT FROM NEW.FaultStatus_ID)
+EXECUTE FUNCTION deactivateFault();
+
+-- DROP
+-- Remove the views
+DROP VIEW IF EXISTS user_details CASCADE;
+DROP VIEW IF EXISTS customer_details CASCADE;
+DROP VIEW IF EXISTS v_main_grid CASCADE;
+
+-- Remove the trigger
+DROP TRIGGER IF EXISTS t_deactivateFault ON Fault;
+
+-- Remove the function
+DROP FUNCTION IF EXISTS deactivateFault();
+
+-- Remove the tables in the correct order
+DROP TABLE IF EXISTS Fault CASCADE;
+DROP TABLE IF EXISTS TimeSlot CASCADE;
+DROP TABLE IF EXISTS Serviceman CASCADE;
+DROP TABLE IF EXISTS Subcontractor CASCADE;
+DROP TABLE IF EXISTS Customer CASCADE;
+DROP TABLE IF EXISTS FaultStatus CASCADE;
+DROP TABLE IF EXISTS SlotHour CASCADE;
+DROP TABLE IF EXISTS Users CASCADE;
+DROP TABLE IF EXISTS Roles CASCADE;
+DROP TABLE IF EXISTS Location CASCADE;
+DROP TABLE IF EXISTS FaultType CASCADE;

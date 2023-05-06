@@ -82,6 +82,7 @@ export default {
       showIn: this.show,
       login: '',
       email: '',
+      roleId: 0,
       valid: true,
       rule: [
         (v) => {
@@ -110,22 +111,24 @@ export default {
     },
     async getDictionaries () {
       const response = await this.$axios.get('api/getTypeDict')
-      const res = response.data.rows
-      res.forEach((el) => {
+      response.data.rows.forEach((el) => {
         this.faultTypesNvp.push(el)
-        // this.selectedType.push(el.id)
         this.faultTypes.push(el.name)
       })
-      // this.faultTypes = response.data.rows
+      const response2 = await this.$axios.get('api/getRoleDict')
+      console.log('roles: ', response2)
+      response2.data.rows.forEach((el) => {
+        if (el.name === 'Serviceman') {
+          this.roleId = el.id
+        }
+      })
     },
     async send () {
       if (this.$refs.form.validate()) {
-        console.log('valid')
-        //   const firmObj = this.faultTypesNvp.filter(nvp => nvp.name === this.firm)
-        // this.firmData.id = firmObj[0].id
+        // console.log('valid')
         const faultIds = []
         console.log(this.faultTypesNvp)
-        console.log('----', this.selectedType)
+        // console.log('----', this.selectedType)
         for (let i = 0; i < this.faultTypesNvp.length; i++) {
           for (let j = 0; j < this.selectedType.length; j++) {
             if (this.faultTypesNvp[i].name === this.selectedType[j]) {
@@ -138,19 +141,12 @@ export default {
           subcontractorId: this.firm.id,
           qualifications: faultIds,
           login: this.login,
-          email: this.email
+          email: this.email,
+          roleId: this.roleId
         }
         const response = await this.$axios.post('api/addServiceman', data) // merge
         console.log('serviceman add res: ', response)
         this.msg = response.status
-        // const data2 = {
-        //   subcontractorId: this.firm.id,
-        //   qualifications: faultIds,
-        //   login: this.login,
-        //   email: this.email
-        // }
-        // const response2 = await this.$axios.post('api/autoInsertNew', data2) // merge
-        // console.log('serviceman add slot res: ', response2)
       }
     }
   }

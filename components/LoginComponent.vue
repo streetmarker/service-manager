@@ -124,6 +124,7 @@ export default {
               : (this.successMsg = 'Logged in')
           }
         }, 500)
+        this.$emit('logged', true)
       } catch (err) {
         this.errorMsg = err
         // eslint-disable-next-line no-console

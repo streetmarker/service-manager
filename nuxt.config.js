@@ -5,6 +5,15 @@ export default {
     host: '0.0.0.0',
     port: 3000
   },
+  // router: { // dynamic routing
+  //   extendRoutes (routes, resolve) {
+  //     routes.push({
+  //       name: 'faults-details',
+  //       path: '/pages/faults',
+  //       component: resolve(__dirname, '/pages/faults')
+  //     })
+  //   }
+  // },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - service-manager',
@@ -44,7 +53,8 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/router'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

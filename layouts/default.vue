@@ -7,12 +7,6 @@
         <v-btn to="/">
           {{ title }}
         </v-btn>
-        <v-btn to="/customerForm">
-          TEST customerForm
-        </v-btn>
-        <v-btn to="/mobileApp">
-          TEST mobile
-        </v-btn>
       </v-toolbar-title>
       <v-spacer />
       <v-btn
@@ -67,6 +61,18 @@
     </v-navigation-drawer>
     <v-footer app>
       <span>&copy; {{ new Date().getFullYear() }} Service Panel</span>
+      <v-spacer />
+      <v-btn color="primary" to="/index">
+        P
+      </v-btn>
+      <v-spacer />
+      <v-btn color="secondary" to="/customerForm">
+        C
+      </v-btn>
+      <v-spacer />
+      <v-btn color="accent" to="/mobileApp">
+        M
+      </v-btn>
     </v-footer>
   </v-app>
 </template>

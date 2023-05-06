@@ -34,11 +34,13 @@
               rounded
               @click="showDetails(item)"
             >
-              <v-icon>mdi-information</v-icon>
+              <nuxt-link :to="'/faults/' + item.id">
+                <v-icon>mdi-information</v-icon>
+              </nuxt-link>
             </v-btn>
           </template>
           <template v-slot:item.isactive="{ item }">
-            <div v-if="!!item">
+            <div v-if="item.isactive">
               <v-chip color="success" outlined>
                 AKTYWNA
               </v-chip>

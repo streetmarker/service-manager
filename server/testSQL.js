@@ -9,8 +9,15 @@ async function getFirms () {
   console.log('S', s, 'E', e)
   // const arr =[3, 4]
   const result = await db.query(
-    `SELECT * FROM users
-    WHERE login = $1 AND "password" = $2`, ['admin', 'admin1'])
+    `SELECT
+    comment.login AS login,
+    comment.value AS value
+  FROM
+    fault f,
+    unnest(f.comments) AS comment
+  WHERE
+    f.id = 2;`
+  )
   return result.rows
 }
 getFirms()
