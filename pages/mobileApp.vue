@@ -136,7 +136,7 @@ export default {
     },
     getFaults () {
       setTimeout(async () => {
-        const userId = await this.$store.state.user.user.id
+        const userId = await this.$store.state.user.user.svmid
         const body = {
           svmId: userId
         }

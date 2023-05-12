@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
   console.log('Create Fault: ', req.body)
   db.query(
     `INSERT INTO Fault (Customer_ID, RequestDate, Description, FaultType_ID, TimeSlot_ID, Comments, SlotHour_ID, IsActive, FaultStatus_ID )
-    VALUES ($1, current_timestamp, $2, $3, $4, $5, $6, $7, $8)`, [customerId, description, faultTypeId, timeSlotId, null, slotHourId, true, null],
+    VALUES ($1, current_timestamp, $2, $3, $4, $5, $6, $7, $8) RETURNING id`, [customerId, description, faultTypeId, timeSlotId, null, slotHourId, true, null],
     async (error, results) => {
       if (error) {
         console.log('Create Fault error: ', error)
@@ -25,7 +25,7 @@ router.post('/', (req, res) => {
         'UPDATE TimeSlot t SET reserved = ($1) WHERE id = $2', [reservedUpdate, timeSlotId]
       )
       console.log(results)
-      res.json({ message: 'Termin zarezerwowany' })
+      res.json({ results, message: 'Termin zarezerwowany' })
     })
 })
 

@@ -202,14 +202,16 @@ export default {
       this.fault = fault
     },
     async insertComment () {
-      const body = {
-        login: this.$store.state.user.user.login,
-        value: this.comment,
-        faultId: this.fault.id
+      if (this.comment.length > 0) {
+        const body = {
+          login: this.$store.state.user.user.login,
+          value: this.comment,
+          faultId: this.fault.id
+        }
+        console.log('comment body', body)
+        const response = await this.$axios.post('api/insertComment', body)
+        console.log(response)
       }
-      console.log('comment body', body)
-      const response = await this.$axios.post('api/insertComment', body)
-      console.log(response)
     },
     reset () {
       this.selectedStatus = ''

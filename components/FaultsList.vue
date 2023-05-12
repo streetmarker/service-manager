@@ -19,6 +19,8 @@
           :items-per-page="itemsPerPage"
           hide-default-footer
           class="elevation-1"
+          sort-by="id"
+          :sort-desc="true"
           @page-count="pageCount = $event"
         >
           <template v-slot:item.actions="{ item }">

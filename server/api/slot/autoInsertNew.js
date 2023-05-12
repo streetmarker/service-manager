@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
   const month = new Date().getMonth() + 1
   const monthDays = new Date(year, month, 0).getDate()
   const daysLeft = monthDays - new Date().getDate()
-  for (let i = 1; i <= daysLeft; i++) {
+  for (let i = 0; i <= daysLeft; i++) {
     // Calculate the date for the current iteration
     const date = new Date()
     date.setDate(date.getDate() + i)

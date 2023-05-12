@@ -135,7 +135,8 @@ VALUES ('Anna Kowalska', 'password123', '555-123-456', 'anna.kowalska@example.co
 
 -- VIEWS
 CREATE OR REPLACE VIEW user_details AS
-SELECT u.id, u.login, u.email, r.id AS roleId, r.name AS roleName, r.is_admin AS isAdmin FROM Users u
+SELECT u.id, u.login, u.email, s.id as svmId, r.id AS roleId, r.name AS roleName, r.is_admin AS isAdmin FROM Users u
+LEFT JOIN Serviceman s ON u.id = s.users_id
 LEFT JOIN Roles r ON u.Role_ID = r.ID;
 
 CREATE OR REPLACE VIEW customer_details as
@@ -169,7 +170,7 @@ CREATE OR REPLACE FUNCTION get_comments_by_id(fault_id integer)
   $$ LANGUAGE plpgsql;
   
 -- PROCEDURES
-CREATE OR REPLACE PROCEDURE remove_svm (svm_id INT, OUT userId INT)
+CREATE OR REPLACE PROCEDURE remove_svm (svm_id INT, OUT userId INT, out result TEXT)
     LANGUAGE plpgsql
     AS $$
     BEGIN
@@ -177,6 +178,7 @@ CREATE OR REPLACE PROCEDURE remove_svm (svm_id INT, OUT userId INT)
       DELETE FROM timeslot where serviceman_id = svm_id;
       DELETE FROM serviceman where id = svm_id;
       DELETE FROM users WHERE id = userId;
+     EXCEPTION WHEN SQLSTATE '23503' then result = 'Nie można usunąć rekordu';
     END;
     $$;
 -- nie można usunąć jak ma zlecenia dlatego można opracować system archiwizacji zleceń tak aby czyścić tabele fault i np. pytać czy usunąć auto po archiwizacji tabeli

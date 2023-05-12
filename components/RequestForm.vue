@@ -37,6 +37,8 @@
             <v-date-picker
               v-model="picker"
               color="info"
+              :show-current="dateFrom.toISOString().slice(0, 10)"
+              :min="dateFrom.toISOString().slice(0, 10)"
               :max="dateTo.toISOString().slice(0,10)"
               elevation="15"
             />
@@ -102,6 +104,7 @@
         </v-btn>
       </v-card-actions>
       <v-card-text>{{ resultMsg }}</v-card-text>
+      {{ slotResponse }}
     </v-card>
   </div>
 </template>
@@ -110,15 +113,17 @@
 
 const today = new Date()
 const dateTo = new Date(today)
+const dateFrom = new Date(today)
+dateFrom.setDate(today.getDate() + 1)
 dateTo.setDate(today.getDate() + 28)
 
 export default {
   name: 'ServiceManagerRequestForm',
   data: () => ({
     selectedSlot: null,
-    today,
+    dateFrom,
     dateTo,
-    picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+    picker: dateFrom.toISOString().substr(0, 10), // (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
     valid: false,
     description: 'slotResponse',
     descriptionRule: [
@@ -186,12 +191,13 @@ export default {
           // timeSlot_2: slot2
         }
         const response = await this.$axios.post('api/findSlot', body)
-        this.slotResponse = response.data[0]
+        console.log('find slot response', response)
+        this.slotResponse = response.data.availableTechnicians[0]
         this.freeSlot = []
         const arr = [1, 2, 3, 4, 5, 6, 7]
         try {
           this.freeSlot = arr.filter(el =>
-            !response.data[0].reserved.includes(el)
+            !response.data.availableTechnicians[0].reserved.includes(el)
           )
           console.log('wolne sloty: ', this.freeSlot)
         } catch (err) {
@@ -222,7 +228,7 @@ export default {
         slotHourId
       }
       const response = await this.$axios.post('api/createFault', body)
-      this.resultMsg = response.data.message
+      this.resultMsg = response.data
     }
   }
 }

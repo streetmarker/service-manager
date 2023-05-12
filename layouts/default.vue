@@ -62,7 +62,7 @@
     <v-footer app>
       <span>&copy; {{ new Date().getFullYear() }} Service Panel</span>
       <v-spacer />
-      <v-btn color="primary" to="/index">
+      <v-btn color="primary" to="/">
         P
       </v-btn>
       <v-spacer />

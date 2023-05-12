@@ -6,7 +6,7 @@ router.post('/', async (req, res) => {
   const { subcontractorId, qualifications, login, email, roleId } = req.body
   console.log(req.body)
   const res1 = await db.query(
-    'INSERT INTO Users (Login, password Email, Role_ID) VALUES ($1, t, $2, $3) RETURNING id',
+    'INSERT INTO Users (Login, password, Email, Role_ID) VALUES ($1, \'123\', $2, $3) RETURNING id',
     [login, email, roleId]
   )
   console.log('svm add res: ', res1)

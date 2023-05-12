@@ -220,6 +220,7 @@ export default {
       ],
       // dialogs
       editedItem: {},
+      defaultItem: {},
       editedIndex: -1,
       dialog: false,
       dialogDelete: false
@@ -270,45 +271,44 @@ export default {
     },
     // modals
     editItem (item) {
-      // this.editedIndex = this.desserts.indexOf(item)
+      this.editedIndex = this.serviceman.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
-    async deleteItem (item) {
-      // console.log(item)
-      const body = {
-        svmId: item.svmid
-      }
-      const response = await this.$axios.post('api/removeServiceman', body)
-      console.log('delete svm: ', response)
-      // this.editedIndex = this.desserts.indexOf(item)
-      // this.editedItem = Object.assign({}, item)
+    deleteItem (item) {
+      this.editedIndex = this.serviceman.indexOf(item)
+      this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
-    deleteItemConfirm () {
-      // this.desserts.splice(this.editedIndex, 1)
+    async deleteItemConfirm () {
+      const body = {
+        svmId: this.serviceman[this.editedIndex].svmid
+      }
+      const response = await this.$axios.post('api/removeServiceman', body)
+      console.log('delete svm: ', response)
       this.closeDelete()
+      this.getServiceman(this.firm)
     },
 
     close () {
       this.dialog = false
-      // this.$nextTick(() => {
-      //   this.editedItem = Object.assign({}, this.defaultItem)
-      //   this.editedIndex = -1
-      // })
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
 
     closeDelete () {
       this.dialogDelete = false
-      // this.$nextTick(() => {
-      //   this.editedItem = Object.assign({}, this.defaultItem)
-      //   this.editedIndex = -1
-      // })
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
 
-    save () {
+    save () { // UPDATE record logic
       // if (this.editedIndex > -1) {
       //   Object.assign(this.desserts[this.editedIndex], this.editedItem)
       // } else {

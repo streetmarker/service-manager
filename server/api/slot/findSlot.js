@@ -30,9 +30,10 @@ router.post('/', async (req, res) => {
   res1.rows.forEach((element) => {
     firms.push({ firm: element, matrix: calculateMatrix(clientLocation.x, clientLocation.y, element.coordinates.x, element.coordinates.y) })
   })
-  // console.log('sorted firms: ', firms.sort())
 
-  const sortedFirms = firms.sort()
+  const sortedFirms = firms.sort(function (a, b) {
+    return a.matrix - b.matrix
+  })
   const start = date + 'T00:00:00.000'
   const end = date + 'T23:59:00.000'
   const res2prefer = await db.query(
@@ -71,15 +72,15 @@ router.post('/', async (req, res) => {
     })
     if (availableTechnicians.length === 0) {
       console.log('no slot')
-      res.json({ message: 'brak slotów, wybierz inny termin' })
+      res.json({ firms, message: 'brak slotów, wybierz inny termin' })
     } else {
       // console.log(availableTechnicians)
-      res.json(availableTechnicians)
+      res.json({ firms, availableTechnicians })
     }
   } catch (err) {
     console.log('no slot catch')
     console.log(err)
-    res.json({ message: 'brak slotów, wybierz inny termin' })
+    res.json({ firms, message: 'brak slotów, wybierz inny termin' })
   }
 })
 

@@ -22,12 +22,14 @@ getFirms()
   .then((result) => {
     // console.log(result)
     const year = new Date().getFullYear()
-    const nextMonth = new Date().getMonth() + 2
-    const monthDays = new Date(year, nextMonth, 0).getDate()
+    const currentMonth = new Date().getMonth() + 1
+    const monthDays = new Date(year, currentMonth, 0).getDate()
+    const nextMonthDays = new Date(year, currentMonth + 1, 0).getDate()
+    const daysToInsert = monthDays + nextMonthDays
     // insert slots for next month (auto insert on last day of the month)
     result.forEach((element) => {
       console.log(element)
-      for (let i = 1; i <= monthDays; i++) {
+      for (let i = 0; i <= daysToInsert; i++) {
         // Calculate the date for the current iteration
         const date = new Date()
         date.setDate(date.getDate() + i)
