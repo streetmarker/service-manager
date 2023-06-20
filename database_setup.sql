@@ -25,7 +25,8 @@ CREATE TABLE Users (
   Login VARCHAR(50) NOT NULL UNIQUE, -- imie.nazwisko
   Password VARCHAR(50), -- logika w aplikacji jeżeli null to prompt o ustawienie
   Email VARCHAR(50) NOT NULL UNIQUE,
-  Role_ID INTEGER NOT NULL REFERENCES Roles(ID)
+  Role_ID INTEGER NOT NULL REFERENCES Roles(ID),
+  isActive bool NULL DEFAULT true
 );
 
 CREATE TABLE Subcontractor (
@@ -175,14 +176,15 @@ CREATE OR REPLACE PROCEDURE remove_svm (svm_id INT, OUT userId INT, out result T
     AS $$
     BEGIN
       SELECT users_id into userId FROM serviceman WHERE id = svm_id;
-      DELETE FROM timeslot where serviceman_id = svm_id;
-      DELETE FROM serviceman where id = svm_id;
-      DELETE FROM users WHERE id = userId;
+      update users set isactive = false where id = userId;
+      DELETE FROM timeslot where serviceman_id = svm_id and reserved = '{}';
+--      DELETE FROM serviceman where id = svm_id;
+--      DELETE FROM users WHERE id = userId;
      EXCEPTION WHEN SQLSTATE '23503' then result = 'Nie można usunąć rekordu';
     END;
     $$;
--- nie można usunąć jak ma zlecenia dlatego można opracować system archiwizacji zleceń tak aby czyścić tabele fault i np. pytać czy usunąć auto po archiwizacji tabeli
-
+-- NIEAKTUALNE nie można usunąć jak ma zlecenia dlatego można opracować system archiwizacji zleceń tak aby czyścić tabele fault i np. pytać czy usunąć auto po archiwizacji tabeli
+-- AKTUALNIE usuwamy puste timesloty dla svm i ustawiamy flagę isactive
 -- TRIGGERS
 CREATE OR REPLACE FUNCTION deactivateFault()
 RETURNS TRIGGER AS $$

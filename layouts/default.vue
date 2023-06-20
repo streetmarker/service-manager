@@ -3,11 +3,11 @@
     <!-- v-if="Object.keys($store.state.user.user).length == 0" -->
     <!-- nie działa kolor dla customera -->
     <v-app-bar v-if="$store.state.user.token.length == 0" :clipped-left="clipped" fixed app>
-      <v-toolbar-title>
-        <v-btn to="/">
-          {{ title }}
-        </v-btn>
-      </v-toolbar-title>
+      <!-- <v-toolbar-title> -->
+      <!-- <v-btn to="/"> -->
+      {{ title }}
+      <!-- </v-btn> -->
+      <!-- </v-toolbar-title> -->
       <v-spacer />
       <v-btn
         v-if="$store.state.user.token.length > 0"
@@ -18,12 +18,12 @@
       </v-btn>
     </v-app-bar>
     <!--  -->
-    <v-app-bar v-else color="primary" :clipped-left="clipped" fixed app>
+    <v-app-bar v-else color="#29B6F6" :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
-        <v-btn to="/">
-          {{ title }}
-        </v-btn>
+        <!-- <v-btn to="/"> -->
+        {{ title }}
+        <!-- </v-btn> -->
       </v-toolbar-title>
       <v-spacer />
       <v-btn

@@ -104,7 +104,22 @@
         </v-btn>
       </v-card-actions>
       <v-card-text>{{ resultMsg }}</v-card-text>
-      {{ slotResponse }}
+      <v-list>
+        <v-list-item v-for="(f, index) in slotResponse.firms" :key="f.id">
+          <div v-if="index === 0">
+            Najbliższa wybrana firma:<br>
+            <b>{{ f.firm.name }}
+              -
+              {{ f.matrix }} km</b><br>
+            Pozostałe firmy:
+          </div>
+          <div v-if="index > 0 && index <= 5">
+            {{ f.firm.name }}
+            -
+            {{ f.matrix }} km
+          </div>
+        </v-list-item>
+      </v-list>
     </v-card>
   </div>
 </template>
@@ -148,6 +163,7 @@ export default {
     selectedType: [],
     faultTypesNvp: [],
     slotResponse: null,
+    selectedSlotResponse: null,
     freeSlot: [],
     msg: null,
     resultMsg: null
@@ -192,7 +208,8 @@ export default {
         }
         const response = await this.$axios.post('api/findSlot', body)
         console.log('find slot response', response)
-        this.slotResponse = response.data.availableTechnicians[0]
+        this.slotResponse = response.data
+        this.selectedSlotResponse = response.data.availableTechnicians[0]
         this.freeSlot = []
         const arr = [1, 2, 3, 4, 5, 6, 7]
         try {
@@ -224,7 +241,7 @@ export default {
         customerId: this.$store.state.customer.customer.id,
         description: this.description,
         faultTypeId,
-        timeSlotId: this.slotResponse.slotid,
+        timeSlotId: this.selectedSlotResponse.slotid,
         slotHourId
       }
       const response = await this.$axios.post('api/createFault', body)

@@ -86,7 +86,7 @@
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
         <v-card-title class="text-h5">
-          Are you sure you want to delete this item?
+          Czy na pewno dezaktywować konto?
         </v-card-title>
         <v-card-actions>
           <v-spacer />
@@ -142,34 +142,39 @@
       </v-card-text>
     </v-card>
     <br>
-
-    <v-data-table
-      :headers="headers"
-      :items="serviceman"
-    >
-      <template v-slot:item.actions="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="deleteItem(item)"
-        >
-          mdi-delete
-        </v-icon>
-      </template>
-      <template #no-data>
-        <v-btn
-          color="primary"
-        >
-          Wybierz wykonawcę powyżej
-        </v-btn>
-      </template>
-    </v-data-table>
+    <v-card>
+      <v-data-table
+        :headers="headers"
+        :items="serviceman"
+      >
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+        <template #no-data>
+          <v-btn
+            color="primary"
+          >
+            Wybierz wykonawcę powyżej
+          </v-btn>
+        </template>
+      </v-data-table>
+      <!-- <v-btn @click="tmp">
+        tmp
+      </v-btn>
+      {{ _name }} -->
+    </v-card>
     <br>
 
     <AddSubcontractorControl :show="modal1" />
@@ -216,6 +221,12 @@ export default {
           sortable: false,
           value: 'email'
         },
+        {
+          text: 'Active',
+          align: 'start',
+          sortable: true,
+          value: 'isactive'
+        },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
       // dialogs
@@ -246,6 +257,9 @@ export default {
     this.getFirms()
   },
   methods: {
+    tmp () {
+      console.log(this)
+    },
     async getServiceman (firmId) {
       const body = {
         firmId
@@ -288,7 +302,12 @@ export default {
       }
       const response = await this.$axios.post('api/removeServiceman', body)
       console.log('delete svm: ', response)
+      // if (!response.data.rows[0].result) {
+      // console.log(response.data.rows[0].result)
       this.closeDelete()
+      // } else {
+      //   console.log(response.data.rows[0].result)
+      // }
       this.getServiceman(this.firm)
     },
 

@@ -1,23 +1,26 @@
 <template>
   <div>
-    <v-col>
-      <v-card>
-        <v-card-title>
-          <v-btn color="primary" @click="modal1 = !modal1">
-            Dodaj klienta
-          </v-btn>
-          <v-spacer />
-          <v-btn @click="getCustomers()">
-            odświerz
-            <v-icon>mdi-refresh</v-icon>
-          </v-btn>
-        </v-card-title>
-      </v-card>
-    </v-col>
-    <v-data-table
-      :headers="headers"
-      :items="customers"
-    />
+    <!-- <v-col> -->
+    <v-card>
+      <v-card-title>
+        <v-btn color="primary" @click="modal1 = !modal1">
+          Dodaj klienta
+        </v-btn>
+        <v-spacer />
+        <v-btn @click="getCustomers()">
+          odświerz
+          <v-icon>mdi-refresh</v-icon>
+        </v-btn>
+      </v-card-title>
+    </v-card>
+    <br>
+    <!-- </v-col> -->
+    <v-card>
+      <v-data-table
+        :headers="headers"
+        :items="customers"
+      />
+    </v-card>
     <br>
     <v-row>
       <AddCustomerControl :show="modal1" />

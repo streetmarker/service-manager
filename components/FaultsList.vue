@@ -3,14 +3,21 @@
 <template>
   <div>
     <v-card>
-      <v-card-title>
-        Lista zleceń
-        <v-spacer />
-        <v-btn @click="getFaults">
-          odświerz
-          <v-icon>mdi-refresh</v-icon>
-        </v-btn>
-      </v-card-title>
+      <v-banner
+        color="#81D4FA"
+        rounded
+        single-line
+      >
+        <v-card-title>
+          Lista zleceń
+          <v-spacer />
+          <!-- <v-btn @click="getFaults">
+            odświerz
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn> -->
+          <v-btn><v-icon>mdi-microsoft-excel</v-icon></v-btn>
+        </v-card-title>
+      </v-banner>
       <v-card-text>
         <v-data-table
           :headers="headers"

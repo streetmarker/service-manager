@@ -2,41 +2,45 @@
 <template>
   <v-card>
     <!-- firmy select -->
-    <v-card-title>
-      Grafik Slotów
-      <v-select
-        v-model="firm"
-        style="max-width:30%; padding-left: 10%"
-        label="Wybierz firmę"
-        :items="firms"
-      />
-      <v-menu
-        ref="menu"
-        v-model="menu"
-        transition="scale-transition"
-        offset-y
-        max-width="290px"
-        min-width="auto"
-      >
-        <template #activator="{ on, attrs }">
-          <v-text-field
-            v-model="dateSelect"
-            label="Stan slotów na dzień"
-            prepend-icon="mdi-calendar"
-            v-bind="attrs"
-            required
-            v-on="on"
-          />
-        </template>
-        <v-date-picker
-          v-model="dateSelect"
-          no-title
+    <v-banner
+      color="#81D4FA"
+      rounded
+    >
+      <v-card-title>
+        Grafik Slotów
+        <v-select
+          v-model="firm"
+          style="max-width:30%; padding-left: 10%"
+          label="Wybierz firmę"
+          :items="firms"
         />
-      </v-menu>
-      <v-btn @click="getSlots(firm)">
-        refresh
-      </v-btn>
-    </v-card-title>
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="auto"
+        >
+          <template #activator="{ on, attrs }">
+            <v-text-field
+              v-model="dateSelect"
+              label="Stan slotów na dzień"
+              prepend-icon="mdi-calendar"
+              v-bind="attrs"
+              required
+              v-on="on"
+            />
+          </template>
+          <v-date-picker
+            v-model="dateSelect"
+            no-title
+          />
+        </v-menu>
+      </v-card-title>
+    </v-banner>
+    <br>
+    <br>
     <template>
       <div>
         <v-row
@@ -61,18 +65,35 @@
                 </v-col>
                 <v-col v-for="time in timeTable" :key="time.id">
                   <div v-if="!timeSlot.reserved.includes(time.id)">
-                    <v-btn>
-                      {{ time.start }} -
-                      {{ time.end }}
-                    </v-btn>
+                    <v-tooltip top>
+                      <template #activator="{ on, attrs }">
+                        <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          {{ time.start }} -
+                          {{ time.end }}
+                        </v-btn>
+                      </template>
+                      <span>Id klienta:<br>
+                        Id umowy:</span>
+                    </v-tooltip>
                   </div>
                   <div v-else>
-                    <v-btn
-                      color="success"
-                    >
-                      {{ time.start }} -
-                      {{ time.end }}
-                    </v-btn>
+                    <v-tooltip top>
+                      <template #activator="{ on, attrs }">
+                        <v-btn
+                          color="success"
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          {{ time.start }} -
+                          {{ time.end }}
+                        </v-btn>
+                      </template>
+                      <span>Id klienta:<br>
+                        Id umowy:</span>
+                    </v-tooltip>
                   </div>
                 </v-col>
               </v-row>
@@ -82,6 +103,9 @@
         </v-container>
       </div>
     </template>
+    <!-- <v-btn @click="tmp">
+      tmp
+    </v-btn> -->
   </v-card>
 </template>
 
@@ -110,6 +134,9 @@ export default {
     this.getFirms()
   },
   methods: {
+    tmp () {
+      console.log(this)
+    },
     onScroll (e) {
       this.offsetTop = e.target.scrollTop
     },

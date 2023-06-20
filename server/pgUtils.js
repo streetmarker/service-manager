@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const pool = new Pool({
   user: 'postgres',
-  host: 'localhost',
+  host: 'localhost', // '130.162.58.161',
   database: 'postgres',
   password: process.env.NUXT_ENV_PG_PASSWORD,
   port: 5432
