@@ -4,7 +4,7 @@
   <div>
     <v-card>
       <v-banner
-        color="#81D4FA"
+        color="indigo darken-3"
         rounded
         single-line
       >
@@ -116,6 +116,11 @@ export default {
           text: 'Przydzielona firma',
           align: 'start',
           value: 'name'
+        },
+        {
+          text: 'Przydzielony serwisant',
+          align: 'start',
+          value: 'login'
         },
         {
           text: 'Status ogólny',

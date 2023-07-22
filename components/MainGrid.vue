@@ -3,7 +3,7 @@
   <v-card>
     <!-- firmy select -->
     <v-banner
-      color="#81D4FA"
+      color="indigo darken-3"
       rounded
     >
       <v-card-title>

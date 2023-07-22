@@ -25,34 +25,36 @@
             required
             data-cy="svmEmail"
           />
-          <v-select
-            v-model="selectedType"
-            :rules="listRule"
-            :items="faultTypes"
-            label="Kwalifikacje"
-            multiple
-            required
-            data-cy="svmQalifications"
-          />
-          <v-card-actions>
-            <v-btn
-              :disabled="!valid"
-              color="primary"
-              class="mr-4"
-              data-cy="saveAddSvm"
-              @click="send"
-            >
-              Zapisz dane
-            </v-btn>
-            <v-btn
-              color="error"
-              class="mr-4"
-              data-cy="exitAddSvm"
-              @click="showIn = !showIn"
-            >
-              Zamknij okno
-            </v-btn>
-          </v-card-actions>
+          <v-row>
+            <v-card-actions>
+              <v-btn
+                :disabled="!valid"
+                color="primary"
+                class="mr-4"
+                data-cy="saveAddSvm"
+                @click="send"
+              >
+                Zapisz dane
+              </v-btn>
+              <v-btn
+                color="error"
+                class="mr-4"
+                data-cy="exitAddSvm"
+                @click="showIn = !showIn"
+              >
+                Zamknij okno
+              </v-btn>
+            </v-card-actions>
+            <v-select
+              v-model="selectedType"
+              :rules="listRule"
+              :items="faultTypes"
+              label="Kwalifikacje"
+              multiple
+              required
+              data-cy="svmQalifications"
+            />
+          </v-row>
         </v-form>
         {{ msg }}
       </v-card-text>

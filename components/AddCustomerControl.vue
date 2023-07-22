@@ -29,9 +29,10 @@
             label="Email"
             required
           />
-          <v-text-field
+          <v-select
             v-model="city"
             :rules="rule"
+            :items="cities"
             label="Miasto"
             required
           />
@@ -141,7 +142,8 @@ export default {
       ],
       menu1: false,
       menu2: false,
-      locationId: null
+      locationId: null,
+      cities: ['Warszawa', 'Sulejówek']
     }
   },
   watch: {

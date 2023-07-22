@@ -99,13 +99,19 @@
     <v-card v-if="selectedSlot">
       <v-card-title>Wybrany slot czasowy:   <b> {{ selectedSlot }}</b></v-card-title>
       <v-card-actions>
-        <v-btn color="success" @click="createFault">
+        <v-btn color="secondary" @click="createFault">
           Zarezerwój termin serwisu
         </v-btn>
       </v-card-actions>
-      <v-card-text>{{ resultMsg }}</v-card-text>
+      <v-alert
+        v-if="resultMsg"
+        type="success"
+        elevarion="24"
+      >
+        {{ resultMsg.message }}
+      </v-alert>
       <v-list>
-        <v-list-item v-for="(f, index) in slotResponse.firms" :key="f.id">
+        <v-list-item v-for="(f, index) in slotResponse.firms" :key="f.id" style="min-height: 0;">
           <div v-if="index === 0">
             Najbliższa wybrana firma:<br>
             <b>{{ f.firm.name }}
@@ -113,7 +119,7 @@
               {{ f.matrix }} km</b><br>
             Pozostałe firmy:
           </div>
-          <div v-if="index > 0 && index <= 5">
+          <div v-if="index > 0 && index <= 5" style="margin-bottom: 0;">
             {{ f.firm.name }}
             -
             {{ f.matrix }} km

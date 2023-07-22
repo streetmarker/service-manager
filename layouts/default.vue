@@ -18,7 +18,7 @@
       </v-btn>
     </v-app-bar>
     <!--  -->
-    <v-app-bar v-else color="#29B6F6" :clipped-left="clipped" fixed app>
+    <v-app-bar v-else color="indigo darken-1" :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
         <!-- <v-btn to="/"> -->

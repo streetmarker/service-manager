@@ -163,11 +163,11 @@
           </v-icon>
         </template>
         <template #no-data>
-          <v-btn
+          <v-output-text
             color="primary"
           >
             Wybierz wykonawcę powyżej
-          </v-btn>
+          </v-output-text>
         </template>
       </v-data-table>
       <!-- <v-btn @click="tmp">
