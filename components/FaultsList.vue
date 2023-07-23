@@ -15,7 +15,9 @@
             odświerz
             <v-icon>mdi-refresh</v-icon>
           </v-btn> -->
-          <v-btn><v-icon>mdi-microsoft-excel</v-icon></v-btn>
+          <v-btn @click="generateExcel()">
+            <v-icon>mdi-microsoft-excel</v-icon>
+          </v-btn>
         </v-card-title>
       </v-banner>
       <v-card-text>
@@ -74,6 +76,7 @@
 </template>
 
 <script>
+import tableToXlsx from '../server/api/functions/tableToXlsx'
 import FaultDetailsControl from './FaultDetailsControl'
 
 export default {
@@ -183,6 +186,9 @@ export default {
     },
     handleModal (value) {
       this.modal = value
+    },
+    generateExcel () {
+      tableToXlsx(this.faultsList, 'Lista Zleceń')
     }
   }
 }
