@@ -6,7 +6,6 @@
       {{ $store.state.user.user.login }}
     </v-app-bar>
     <v-main>
-      <!-- {{ fault }} -->
       <v-container>
         <v-layout row>
           <v-flex xs12 sm6>
@@ -68,40 +67,21 @@
                   <v-list-item @click="showAddress = !showAddress">
                     <v-list-item-content>
                       <v-list-item-title>Adres</v-list-item-title>
-                      <!-- <v-expand-transition> -->
-                      <!-- <div v-if="showAddress"> -->
-                      <!-- <v-list-item-subtitle > -->
-                      <!-- <v-textarea> -->
                       {{ fault.display_name }}
-                      <!-- </v-textarea> -->
-                      <!-- </v-list-item-subtitle> -->
-                      <!-- </div> -->
-                      <!-- </v-expand-transition> -->
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
               </v-card-text>
             </v-card>
-            <!-- <v-card> -->
-            <!-- <v-card-text> -->{{ fault.comments }}
             <v-timeline v-for="(com, id) in comments" :key="id" dense>
               <v-timeline-item>
                 <i>{{ com.login }}</i> - {{ com.value }}
               </v-timeline-item>
-              <!-- {{ com.login }}-{{ com.value }} -->
-              <!-- <v-timeline-item>timeline item</v-timeline-item>
-                  <v-timeline-item class="text-right">
-                    timeline item
-                  </v-timeline-item>
-                  <v-timeline-item>timeline item</v-timeline-item> -->
             </v-timeline>
-            <!-- </v-card-text> -->
-            <!-- </v-card> -->
           </v-flex>
         </v-layout>
       </v-container>
       <v-text-field v-model="comment" label="Dodaj komentarz" />
-      <!-- <div v-if="fault.isactive"> -->
       <v-select
         v-model="selectedStatus"
         :items="statusNames"
@@ -119,7 +99,6 @@
       >
         Zapisz zmiany
       </v-btn>
-      <!-- </div> -->
     </v-main>
   </v-app>
 </template>

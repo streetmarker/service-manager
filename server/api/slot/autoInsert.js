@@ -21,6 +21,7 @@ async function getFirms () {
 getFirms()
   .then((result) => {
     // console.log(result)
+    // const today = new Date().getDate()
     const year = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
     const monthDays = new Date(year, currentMonth, 0).getDate()
@@ -29,19 +30,19 @@ getFirms()
     // insert slots for next month (auto insert on last day of the month)
     result.forEach((element) => {
       console.log(element)
-      for (let i = 0; i <= daysToInsert; i++) {
+      for (let i = 0; i < daysToInsert; i++) {
         // Calculate the date for the current iteration
         const date = new Date()
         date.setDate(date.getDate() + i)
 
-        if (date.getDate() === 1) { // block adding slots for next month
-          break
-        }
         db.query(
           'insert into timeslot (serviceman_id, subcontractor_id, reserved, "date") values ($1, $2, \'{}\', $3)',
           [element.svmid, element.subid, date]
         )
         console.log(date)
+        // if (date.getDate() === 1) { // block adding slots for next month
+        //   break
+        // }
       }
     })
   })

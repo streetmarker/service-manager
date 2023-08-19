@@ -99,20 +99,21 @@ export default {
   name: 'ServiceManagerFaultDetailsControl',
   props: {
     // eslint-disable-next-line vue/require-default-prop
-    fault: {
-      type: Object
-    },
+    // fault: {
+    //   type: Object
+    // },
     show: {
       type: Boolean
     }
   },
   data () {
     return {
+      fault: {},
       faultTypes: [],
       selectedType: [],
       faultTypesNvp: [],
       msg: null,
-      showIn: this.show,
+      showIn: false,
       login: '',
       email: '',
       valid: true,
@@ -131,7 +132,14 @@ export default {
   watch: {
     show () {
       this.showIn = !this.showIn
+      console.log(this.showIn)
     }
+    // showIn () {
+    //   this.showIn = !this.showIn
+    //   if (!this.showIn) {
+    //     this.close()
+    //   }
+    // }
   },
   mounted () {
     this.getDictionaries()

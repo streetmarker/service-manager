@@ -24,6 +24,8 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
+    modules: ['vue-browser-update/nuxt',
+      'vue-notification/nuxt', '@nuxtjs/tailwindcss', '@tailvue/nuxt'], // notify
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
@@ -35,6 +37,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/notification.js', mode: 'client' }
+    // { src: '~/plugins/firebase.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -66,10 +70,21 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
+      name: 'Service-manager',
+      short_name: 'SM',
+      display: 'standalone',
       lang: 'en'
+    },
+    icon: {
+      purpose: 'any'
+    },
+    workbox: {
+      // swURL: 'custom-sw.js'
+      importScripts: [
+        'custom-sw.js'
+      ]
     }
   },
-
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],

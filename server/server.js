@@ -1,4 +1,5 @@
 const express = require('express')
+
 const app = express()
 
 const userLogin = require('./api/user/login')
@@ -15,8 +16,6 @@ const getLocations = require('./api/location/getLocations')
 
 const findSlot = require('./api/slot/findSlot')
 const autoInsertNew = require('./api/slot/autoInsertNew')
-// const autoInsert = require('./api/slot/autoInsert') // uruchamiane przez Node
-// const assignSlot = require('./api/slot/assignSlot') // not used??
 
 const getFirmSlots = require('./api/subContractors/getFirmSlots')
 const getFirms = require('./api/subContractors/getFirms')
@@ -57,8 +56,6 @@ app.use('/getLocations', getLocations)
 
 app.use('/findSlot', findSlot)
 app.use('/autoInsertNew', autoInsertNew)
-// app.use('/autoInsert', autoInsert)
-// app.use('/assignSlot', assignSlot)
 
 app.use('/getFirmSlots', getFirmSlots)
 app.use('/getFirms', getFirms)

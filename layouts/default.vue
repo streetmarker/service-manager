@@ -79,6 +79,8 @@
 
 <script>
 import { mapActions } from 'vuex'
+// eslint-disable-next-line import/no-named-as-default
+// import io from 'socket.io-client'
 
 export default {
   name: 'DefaultLayout',
@@ -113,6 +115,39 @@ export default {
       right: true,
       title: 'Service Panel'
     }
+  },
+  mounted () {
+    // const socket = io('http://localhost:3001') // Replace with your Socket.IO server URL
+    // socket.on('new-data', (data) => {
+    //   console.log('socket data in')
+    //   const mess = []
+    //   if (this.$store.state.user.token.length !== 0) {
+    //     for (let i = 0; i < data.length; i++) {
+    //       if (this.$store.state.user.user.id === data[i].id) {
+    //         console.log('user slots notify', i, data[i])
+    //         // for (let j = 0; j < data.reserved.length; j++) {
+    //         mess.push(data[i])
+    //         // }
+    //       }
+    //     }
+    //     const hours = [0, 7, 9, 11, 13, 15, 17, 19]
+    //     let out = ''
+    //     console.log('mess', mess)
+    //     mess.forEach((el) => {
+    //       out += el.date.slice(0, 10) + ' ' + hours[el.reserved] + ':00,'
+    //     })
+    //     console.log(out)
+    //     const notifTitle = 'Przypomnienie'
+    //     const notifBody = 'Masz robotę: ' + out
+    //     const notifImg = '/favicon.ico'
+    //     const options = {
+    //       body: notifBody,
+    //       icon: notifImg
+    //     }
+    //     // eslint-disable-next-line no-new
+    //     new Notification(notifTitle, options)
+    //   }
+    // })
   },
   methods: {
     ...mapActions('user', ['fetchUser', 'fetchToken', 'logoutAction']),

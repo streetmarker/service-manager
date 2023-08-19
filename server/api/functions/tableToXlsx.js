@@ -1,5 +1,6 @@
 
 import * as XLSX from 'xlsx'
+const today = new Date()
 
 function tableToXlsx (jsTable, fileName) {
   // JS table to HTML table
@@ -33,7 +34,7 @@ function tableToXlsx (jsTable, fileName) {
   const workbook = XLSX.utils.table_to_book(table)
   console.log('WORKBOOK', workbook)
   // Package and Release Data (`writeFile` tries to write and save an XLSX file)
-  XLSX.writeFileXLSX(workbook, fileName + '.xlsx')
+  XLSX.writeFileXLSX(workbook, fileName + '_' + today.toISOString().slice(0, 10) + '.xlsx')
 }
 
 export default tableToXlsx

@@ -1,5 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
+OneSignalSDK*
 test*
+fire*
 ### Node template
 # Logs
 /logs

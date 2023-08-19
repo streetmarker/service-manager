@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-async function sendMail (receiver, mailSubject, mailContent) {
+async function sendMail (receiverMail, mailSubject, mailContent) {
   const options = {
     method: 'POST',
-    url: 'https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send',
+    url: process.env.NUXT_ENV_SEND_GRID_URL,
     headers: {
       'content-type': 'application/json',
       'X-RapidAPI-Key': process.env.NUXT_ENV_RAPIDAPI_KEY,
@@ -14,7 +14,7 @@ async function sendMail (receiver, mailSubject, mailContent) {
         {
           to: [
             {
-              email: receiver
+              email: receiverMail
             }
           ],
           subject: mailSubject

@@ -17,5 +17,6 @@ router.post('/', (req, res) => {
       [svmId, subcontractorId, date])
   }
 })
+// db.end()
 
 module.exports = router

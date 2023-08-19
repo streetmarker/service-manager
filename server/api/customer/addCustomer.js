@@ -9,7 +9,8 @@ router.post('/', (req, res) => {
   const tmpPassword = passwoid(5) // docelowo w UPDATE
   try {
     db.query(
-      'INSERT INTO Customer (Full_name, password, Phone, Email, City, Location_ID, Contract_start, Contract_end) VALUES ($1, \'123\', $2, $3, $4, $5, $6, $7) RETURNING id', // TMP PASSWORD
+      `INSERT INTO Customer (Full_name, password, Phone, Email, City, Location_ID, Contract_start, Contract_end)
+      VALUES ($1, \`123\`, $2, $3, $4, $5, $6, $7) RETURNING id`, // TMP PASSWORD
       [fullName, phone, email, city, locationId, contractStart, contractEnd],
       (error, results) => {
         if (error) {

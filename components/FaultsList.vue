@@ -33,21 +33,38 @@
           @page-count="pageCount = $event"
         >
           <template v-slot:item.actions="{ item }">
-            <v-btn
-              @click="showActions(item)"
-            >
-              <b>AKCJE</b>
-            </v-btn>
+            <v-menu offset-x top rounded="0">
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  x-small
+                  depressed
+                  outlined
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="showActions(item)"
+                >
+                  <b>AKCJE</b>
+                </v-btn>
+              </template>
+              <v-card style="max-width: 500px" flat>
+                <!-- v-for="action in actions" :key="action.value" dense -->
+                <v-list>
+                  <v-list-item v-for="action in actions" :key="action.value" dense link @click="openAction(action, item)">
+                    <v-list-item-title>{{ action.name }} </v-list-item-title>
+                    <!-- <AddCommentModal :show="modal1" /> -->
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-menu>
           </template>
           <template v-slot:item.details="{ item }">
             <v-btn
               icon
               rounded
-              @click="showDetails(item)"
+              link
+              @click="openAction('faultDetails', item)"
             >
-              <nuxt-link :to="'/faults/' + item.id">
-                <v-icon>mdi-information</v-icon>
-              </nuxt-link>
+              <v-icon>mdi-information</v-icon>
             </v-btn>
           </template>
           <template v-slot:item.isactive="{ item }">
@@ -71,17 +88,27 @@
         </div>
       </v-card-text>
     </v-card>
-    <FaultDetailsControl :show="modal" :fault="faultData" @open="handleModal" />
+    <!-- <FaultDetailsControl :show="modal" :fault="faultData" @open="handleModal" /> -->
+    <!-- actions -->
+    <FaultDetailsControl ref="faultDetails" />
+    <AddCommentModal ref="addComment" />
+    <CancelService ref="terminateProcess" />
+    <ModifyService ref="changeOrderAttributes" />
+    <ReassignService ref="orderAssignment" />
   </div>
 </template>
 
 <script>
 import tableToXlsx from '../server/api/functions/tableToXlsx'
 import FaultDetailsControl from './FaultDetailsControl'
+import AddCommentModal from './actions/AddCommentModal.vue'
+import CancelService from './actions/CancelService.vue'
+import ModifyService from './actions/ModifyService.vue'
+import ReassignService from './actions/ReassignService.vue'
 
 export default {
   name: 'ServiceManagerFaultsList',
-  components: { FaultDetailsControl },
+  components: { FaultDetailsControl, AddCommentModal, CancelService, ModifyService, ReassignService },
 
   data () {
     return {
@@ -91,6 +118,7 @@ export default {
       pageCount: 0,
       itemsPerPage: 10,
       faultsList: [],
+      // modal1: false,
       headers: [
         {
           // text: '',
@@ -135,6 +163,24 @@ export default {
           align: 'start',
           value: 'city'
         }
+      ],
+      actions: [
+        {
+          name: 'Przypisanie zlecenia do serwisanta',
+          value: 'orderAssignment'
+        },
+        {
+          name: 'Modyfikacja atrybutów zlecenia',
+          value: 'changeOrderAttributes'
+        },
+        {
+          name: 'Anulowanie zlecenia',
+          value: 'terminateProcess'
+        },
+        {
+          name: 'Dodanie komentarza',
+          value: 'addComment'
+        }
       ]
     }
   },
@@ -148,15 +194,28 @@ export default {
   mounted () {
     this.getFaults()
   },
-
+  // watch: {
+  //   modal () {
+  //     this
+  //   }
+  // },
   methods: {
     showDetails (item) {
       this.faultData = Object.assign({}, item)
       this.modal = true
-      console.log(item)
     },
     showActions (item) {
       console.log(item)
+    },
+    openAction (action, item) {
+      if (action.value) {
+        this.$refs[action.value]._data.fault = item
+        this.$refs[action.value]._data.showIn = true
+      } else {
+        // console.log(action, item)
+        this.$refs[action]._data.fault = item
+        this.$refs[action]._data.showIn = true
+      }
     },
     async getFaults () {
       const response = await this.$axios.get('api/getFaults')
@@ -184,9 +243,9 @@ export default {
         console.log(err)
       }
     },
-    handleModal (value) {
-      this.modal = value
-    },
+    // handleModal (value) {
+    //   this.modal = value
+    // },
     generateExcel () {
       tableToXlsx(this.faultsList, 'Lista Zleceń')
     }

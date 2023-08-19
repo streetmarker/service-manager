@@ -63,7 +63,7 @@ export default {
         this.customers = response.data.rows
         if (this.headers.length === 0) {
           response.data.fields.forEach((el) => {
-            this.headers.push({ text: el.name, value: el.name })
+            if (el.name !== 'password') { this.headers.push({ text: el.name, value: el.name }) }
           })
         }
       } catch (err) {

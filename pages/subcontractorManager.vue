@@ -15,13 +15,15 @@
           <v-container>
             <v-row>
               <v-col
+                v-for="header in headersEdit"
+                :key="header.value"
                 cols="12"
                 sm="6"
                 md="4"
               >
                 <v-text-field
-                  v-model="editedItem.login"
-                  label="Dessert name"
+                  v-model="editedItem[header.value]"
+                  :label="header.value"
                 />
               </v-col>
               <v-col
@@ -29,8 +31,13 @@
                 sm="6"
                 md="4"
               >
-                <v-text-field
-                  label="Calories"
+                <v-select
+                  v-model="editedItem.qualifications"
+                  :items="typesNvp"
+                  item-text="name"
+                  item-value="id"
+                  label="qualifications"
+                  multiple
                 />
               </v-col>
               <v-col
@@ -38,26 +45,9 @@
                 sm="6"
                 md="4"
               >
-                <v-text-field
-                  label="Fat (g)"
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Carbs (g)"
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Protein (g)"
+                <v-checkbox
+                  v-model="editedItem.isactive"
+                  label="Aktywny"
                 />
               </v-col>
             </v-row>
@@ -147,6 +137,9 @@
         :headers="headers"
         :items="serviceman"
       >
+        <template v-slot:item.qualifications="{ item }">
+          {{ item.qualifications }}
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
             small
@@ -199,6 +192,8 @@ export default {
       modal2: false,
       firm: null,
       firms: [],
+      typesNvp: [],
+      types: [],
       firmsNvp: [],
       serviceman: [],
       locationName: '',
@@ -229,6 +224,32 @@ export default {
         },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
+      headersEdit: [
+        {
+          text: 'Technician',
+          align: 'start',
+          sortable: false,
+          value: 'login'
+        },
+        // {
+        //   text: 'Qualifications',
+        //   align: 'start',
+        //   sortable: false,
+        //   value: 'qualifications'
+        // },
+        {
+          text: 'Email',
+          align: 'start',
+          sortable: false,
+          value: 'email'
+        }
+        // {
+        //   text: 'Active',
+        //   align: 'start',
+        //   sortable: true,
+        //   value: 'isactive'
+        // }
+      ],
       // dialogs
       editedItem: {},
       defaultItem: {},
@@ -239,7 +260,12 @@ export default {
   },
   watch: {
     firm (val) {
-      this.getServiceman(val)
+      setTimeout(() => {
+        this.getTypes()
+      }, 50)
+      setTimeout(() => {
+        this.getServiceman(val)
+      }, 50)
       console.log('firm Nvp: ', this.firmsNvp)
       const firmObj = this.firmsNvp.filter(nvp => nvp.name === this.firm)
       this.locationName = firmObj[0].display_name
@@ -255,6 +281,7 @@ export default {
   },
   mounted () {
     this.getFirms()
+    // this.getTypes()
   },
   methods: {
     tmp () {
@@ -267,8 +294,20 @@ export default {
       // console.log(firmId)
       const response = await this.$axios.post('api/getServiceman', body)
       try {
-        // console.log(response)
+        console.log('typesNvp', this.typesNvp)
+        console.log('svm', response.data.rows)
         this.serviceman = response.data.rows
+        this.serviceman.forEach((el) => {
+          el.qualifications = el.qualifications.map((qua) => {
+            // const tmp = { name: '', value: qua }
+            console.log('przed', qua)
+            const type = this.typesNvp.find(item => item.id === qua)
+            console.log('po', qua)
+            console.log('find', type)
+            return type || qua
+          })
+        })
+        console.log('svmans', this.serviceman)
       } catch (err) {
         // eslint-disable-next-line no-console
         console.log(err)
@@ -281,6 +320,15 @@ export default {
       res.forEach((el) => {
         this.firmsNvp.push(el)
         this.firms.push(el.name)
+      })
+    },
+    async getTypes () {
+      const response = await this.$axios.get('api/getTypeDict')
+      // console.log(response)
+      const res = response.data.rows
+      res.forEach((el) => {
+        this.typesNvp.push(el)
+        this.types.push(el.name)
       })
     },
     // modals
