@@ -1,8 +1,15 @@
 <template>
   <div>
+    <!-- <v-btn @click="logoutOut">
+      LOG Out
+    </v-btn> -->
     <v-card>
       <v-card-title>
-        Ankieta Usterkowa
+        <h3
+          data-cy="title"
+        >
+          Ankieta Usterkowa
+        </h3>
         <v-col>
           <v-textarea
             :value="$store.state.customer.customer.display_name"
@@ -24,12 +31,14 @@
             :items="faultTypes"
             :rules="ruleType"
             required
+            data-cy="selectType"
           />
           <v-text-field
             v-model="description"
             :rules="descriptionRule"
             label="Opis Usterki"
             required
+            data-cy="description"
           />
           <v-row
             style="padding: 10px;"
@@ -54,11 +63,13 @@
             :items="timeSlots"
             :rules="rule"
             required
+            data-cy="slot1"
           />
           <v-select
             v-model="timeSlot_2"
             label="Alternatywny slot czasowy"
             :items="timeSlots"
+            data-cy="slot2"
           />
         </v-col>
         <v-card-actions>
@@ -66,6 +77,7 @@
             :disabled="!valid"
             color="info"
             class="mr-4"
+            data-cy="send"
             @click="send"
           >
             Szukaj
@@ -84,6 +96,7 @@
               <v-btn
                 v-if="freeSlot.includes(time.id)"
                 color="primary"
+                :class="'slotButton_' + time.id"
                 @click="saveSelectedSlot(time)"
               >
                 {{ time.start }} - {{ time.end }}
@@ -97,9 +110,9 @@
       <v-card-title>Dnia {{ picker }} - {{ msg }}</v-card-title>
     </v-card>
     <v-card v-if="selectedSlot">
-      <v-card-title>Wybrany slot czasowy:   <b> {{ selectedSlot }}</b></v-card-title>
+      <v-card-title>Wybrany slot czasowy:   {{ selectedSlot }}</v-card-title>
       <v-card-actions>
-        <v-btn color="secondary" @click="createFault">
+        <v-btn color="secondary" data-cy="reserve" @click="createFault">
           Zarezerwój termin serwisu
         </v-btn>
       </v-card-actions>
@@ -112,7 +125,7 @@
       </v-alert>
       <v-list>
         <v-list-item v-for="(f, index) in slotResponse.firms" :key="f.id" style="min-height: 0;">
-          <div v-if="index === 0">
+          <div v-if="index === 0" class="1st_firm">
             Najbliższa wybrana firma:<br>
             <b>{{ f.firm.name }}
               -
@@ -131,6 +144,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 
 const today = new Date()
 const dateTo = new Date(today)
@@ -146,7 +160,7 @@ export default {
     dateTo,
     picker: dateFrom.toISOString().substr(0, 10), // (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
     valid: false,
-    description: 'slotResponse',
+    description: '',
     descriptionRule: [
       v => !!v || 'description is required',
       v => (v && v.length <= 500) || 'description must be less than 500 characters'
@@ -178,6 +192,11 @@ export default {
     this.getDictionaries()
   },
   methods: {
+    ...mapActions('customer', ['logoutAction']),
+
+    logoutOut () {
+      this.logoutAction()
+    },
     saveSelectedSlot (val) {
       this.selectedSlot = val.start + '-' + val.end
     },
@@ -198,6 +217,7 @@ export default {
     },
     async send () { // qualification handling on api
       if (this.$refs.form.validate()) {
+        this.freeSlot = []
         const nvp = this.faultTypesNvp
         const type = nvp.filter(nvp => nvp.name === this.selectedType)
         // eslint-disable-next-line no-console
@@ -212,20 +232,20 @@ export default {
           timeSlot_1: slot1
           // timeSlot_2: slot2
         }
-        const response = await this.$axios.post('api/findSlot', body)
-        console.log('find slot response', response)
-        this.slotResponse = response.data
-        this.selectedSlotResponse = response.data.availableTechnicians[0]
-        this.freeSlot = []
-        const arr = [1, 2, 3, 4, 5, 6, 7]
         try {
+          const response = await this.$axios.post('api/findSlot', body)
+          console.log('find slot response', response.data.firms)
+          this.slotResponse = response.data
+          this.selectedSlotResponse = response.data.availableTechnicians[0]
+          this.freeSlot = []
+          const arr = [1, 2, 3, 4, 5, 6, 7]
           this.freeSlot = arr.filter(el =>
             !response.data.availableTechnicians[0].reserved.includes(el)
           )
           console.log('wolne sloty: ', this.freeSlot)
         } catch (err) {
           console.warn('No slots data: ', err)
-          this.msg = response.data.message
+          this.msg = 'Brak wolnych slotów'
         }
       }
     },

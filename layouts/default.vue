@@ -1,13 +1,8 @@
 <template>
   <v-app>
-    <!-- v-if="Object.keys($store.state.user.user).length == 0" -->
-    <!-- nie działa kolor dla customera -->
+    <!--  -->
     <v-app-bar v-if="$store.state.user.token.length == 0" :clipped-left="clipped" fixed app>
-      <!-- <v-toolbar-title> -->
-      <!-- <v-btn to="/"> -->
       {{ title }}
-      <!-- </v-btn> -->
-      <!-- </v-toolbar-title> -->
       <v-spacer />
       <v-btn
         v-if="$store.state.user.token.length > 0"
@@ -17,13 +12,10 @@
         {{ $store.state.user.user.firstname }} | Wyloguj się
       </v-btn>
     </v-app-bar>
-    <!--  -->
     <v-app-bar v-else color="indigo darken-1" :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
-        <!-- <v-btn to="/"> -->
         {{ title }}
-        <!-- </v-btn> -->
       </v-toolbar-title>
       <v-spacer />
       <v-btn
@@ -113,7 +105,8 @@ export default {
       },
       miniVariant: false,
       right: true,
-      title: 'Service Panel'
+      title: 'Service Panel',
+      title2: 'SM'
     }
   },
   mounted () {

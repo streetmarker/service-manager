@@ -67,6 +67,9 @@
               <v-icon>mdi-information</v-icon>
             </v-btn>
           </template>
+          <template v-slot:item.date="{ item }">
+            {{ item.date.slice(0, 19) }}
+          </template>
           <template v-slot:item.isactive="{ item }">
             <div v-if="item.isactive">
               <v-chip color="success" outlined>
@@ -166,7 +169,7 @@ export default {
       ],
       actions: [
         {
-          name: 'Przypisanie zlecenia do serwisanta',
+          name: 'Zmiana przypisania serwisanta',
           value: 'orderAssignment'
         },
         {

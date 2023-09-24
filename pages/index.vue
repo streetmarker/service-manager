@@ -1,9 +1,6 @@
 <template>
   <div>
     <v-row v-if="$store.state.user.token.length == 0" justify="center" align="center">
-      <button @click="requestNotificationPermission">
-        Allow Notifications
-      </button>
       <v-col cols="12" sm="8" md="6">
         <LoginComponent />
         <br>

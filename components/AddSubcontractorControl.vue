@@ -46,7 +46,9 @@
             </v-btn>
           </v-card-actions>
         </v-form>
-        {{ msg }}
+        <v-alert v-if="msg.length > 0" type="info">
+          {{ msg }}
+        </v-alert>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -65,7 +67,7 @@ export default {
   },
   data () {
     return {
-      msg: null,
+      msg: '',
       showIn: this.show,
       name: '',
       city: '',
@@ -99,9 +101,13 @@ export default {
           city: this.city,
           locationId: this.locationId
         }
-        const response = await this.$axios.post('api/addFirm', data)
-        console.log('subcontractor add res: ', response)
-        this.msg = response.status
+        try {
+          const response = await this.$axios.post('api/addFirm', data)
+          console.log('subcontractor add res: ', response)
+          this.msg = 'Dodano'
+        } catch (error) {
+          this.msg = 'Operacja się nie udała, szczegóły błędu:\n' + error
+        }
       }
     }
   }

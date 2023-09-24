@@ -138,7 +138,10 @@
         :items="serviceman"
       >
         <template v-slot:item.qualifications="{ item }">
-          {{ item.qualifications }}
+          <div v-for="qualification in item.qualifications" :key="qualification.id">
+            {{ qualification.name }}
+          </div>
+          <!-- {{ item.qualifications }} -->
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon

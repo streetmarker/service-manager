@@ -4,5 +4,8 @@ export default {
   },
   getToken (state) {
     return state.token
+  },
+  getFaultsList (state) {
+    return state.faultsList
   }
 }

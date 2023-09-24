@@ -1,105 +1,111 @@
 <template>
   <v-app>
-    <v-app-bar app>
+    <!-- <v-app-bar app>
       <v-toolbar-title>Panel serwisanta</v-toolbar-title>
       <v-spacer />
       {{ $store.state.user.user.login }}
-    </v-app-bar>
-    <v-main>
-      <v-container>
-        <v-layout row>
-          <v-flex xs12 sm6>
-            <v-card max-width="500">
-              <v-card-title>Informacje o kliencie</v-card-title>
-              <v-card-text>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>ID</v-list-item-title>
-                      <v-list-item-subtitle>{{ fault.id }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>Data realizacji</v-list-item-title>
-                      <v-list-item-subtitle>{{ fault.date }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>Opis</v-list-item-title>
-                      <v-list-item-subtitle>{{ fault.description }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>Typ usterki</v-list-item-title>
-                      <v-list-item-subtitle>{{ fault.faulttype_id }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>Godzina</v-list-item-title>
-                      <v-list-item-subtitle>{{ hour }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs12 sm6>
-            <v-card max-width="500">
-              <v-card-title>Dane kontaktowe</v-card-title>
-              <v-card-text>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>Imię i nazwisko</v-list-item-title>
-                      <v-list-item-subtitle>{{ fault.full_name }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>Telefon</v-list-item-title>
-                      <v-list-item-subtitle>{{ fault.phone }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item @click="showAddress = !showAddress">
-                    <v-list-item-content>
-                      <v-list-item-title>Adres</v-list-item-title>
-                      {{ fault.display_name }}
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </v-card>
-            <v-timeline v-for="(com, id) in comments" :key="id" dense>
-              <v-timeline-item>
-                <i>{{ com.login }}</i> - {{ com.value }}
-              </v-timeline-item>
-            </v-timeline>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <v-text-field v-model="comment" label="Dodaj komentarz" />
-      <v-select
-        v-model="selectedStatus"
-        :items="statusNames"
-        label="Zmień status"
-      />
-      <v-btn
-        color="warning"
-        @click="reset"
-      >
-        Zresetuj zmiany
-      </v-btn>
-      <v-btn
-        color="success"
-        @click="saveData"
-      >
-        Zapisz zmiany
-      </v-btn>
-    </v-main>
+    </v-app-bar> -->
+    <!-- <v-main> -->
+    <v-container>
+      <v-layout row>
+        <v-flex xs12 sm6>
+          <v-card max-width="500">
+            <v-card-title>Informacje o kliencie</v-card-title>
+            <v-card-text>
+              <v-list>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>ID</v-list-item-title>
+                    <v-list-item-subtitle>{{ fault.id }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Data realizacji</v-list-item-title>
+                    <v-list-item-subtitle>{{ fault.date }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Opis</v-list-item-title>
+                    <v-list-item-subtitle>{{ fault.description }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Typ usterki</v-list-item-title>
+                    <v-list-item-subtitle>{{ fault.faulttype_id }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Godzina</v-list-item-title>
+                    <v-list-item-subtitle>{{ hour }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+        <v-flex xs12 sm6>
+          <v-card max-width="500">
+            <v-card-title>Dane kontaktowe</v-card-title>
+            <v-card-text>
+              <v-list>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Imię i nazwisko</v-list-item-title>
+                    <v-list-item-subtitle>{{ fault.full_name }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Telefon</v-list-item-title>
+                    <v-list-item-subtitle>{{ fault.phone }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item @click="showAddress = !showAddress">
+                  <v-list-item-content>
+                    <v-list-item-title>Adres</v-list-item-title>
+                    {{ fault.display_name }}
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+          <v-timeline v-for="(com, id) in comments" :key="id" dense>
+            <v-timeline-item>
+              <i>{{ com.login }}</i> - {{ com.value }}
+            </v-timeline-item>
+          </v-timeline>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-text-field v-model="comment" label="Dodaj komentarz" />
+    <v-select
+      v-model="selectedStatus"
+      :items="statusNames"
+      label="Zmień status"
+    />
+    <v-row>
+      <v-col>
+        <v-btn
+          color="warning"
+          @click="reset"
+        >
+          Zresetuj zmiany
+        </v-btn>
+      </v-col>
+      <v-col>
+        <v-btn
+          color="success"
+          @click="saveData"
+        >
+          Zapisz zmiany
+        </v-btn>
+      </v-col>
+    </v-row>
+    <!-- </v-main> -->
   </v-app>
 </template>
 
@@ -194,6 +200,7 @@ export default {
     },
     reset () {
       this.selectedStatus = ''
+      this.comment = ''
     },
     formatDate (date) {
       const d = new Date(date)

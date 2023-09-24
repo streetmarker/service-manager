@@ -52,7 +52,7 @@
               label="Kwalifikacje"
               multiple
               required
-              data-cy="svmQalifications"
+              data-cy="svmQualifications"
             />
           </v-row>
         </v-form>
