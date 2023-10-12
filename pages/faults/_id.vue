@@ -176,15 +176,18 @@ export default {
         this.timeSlots.push(el.value)
       })
     },
-    async getFault () {
+    getFault () {
       const body = {
+        token: this.$store.state.user.token,
         faultId: this.$route.params.id
       }
-      const response = await this.$axios.post('api/getFault', body)
-      const fault = response.data.rows[0]
-      const comments = await this.$axios.post('api/getComments', body)
-      this.comments = comments.data.rows
-      this.fault = fault
+      setTimeout(async () => {
+        const response = await this.$axios.post('api/getFault', body)
+        const fault = response.data.rows[0]
+        const comments = await this.$axios.post('api/getComments', body)
+        this.comments = comments.data.rows
+        this.fault = fault
+      }, 50)
     },
     async insertComment () {
       if (this.comment.length > 0) {

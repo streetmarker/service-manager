@@ -1,44 +1,51 @@
-const db = require('./pgUtils')
+const logger = require('../logger')
+// const db = require('./pgUtils')
 
-async function getFirms () {
-  const date = new Date()
-  date.setDate(date.getDate() + 1)
-  console.log(date)
-  const s = date.toISOString().substr(0, 10) + 'T00:00:00.000'
-  const e = date.toISOString().substr(0, 10) + 'T23:59:00.000'
-  console.log('S', s, 'E', e)
-  // const arr =[3, 4]
-  const result = await db.query(
-    `SELECT
-    comment.login AS login,
-    comment.value AS value
-  FROM
-    fault f,
-    unnest(f.comments) AS comment
-  WHERE
-    f.id = 2;`
-  )
-  return result.rows
-}
-getFirms()
-  .then((result) => {
-    console.log(result)
-    // const days = []
-    // const year = new Date().getFullYear()
-    // const day = new Date().getMonth() + 1
-    // const today = new Date(year, day, 0).getDate()
-    // for (let i = 1; i < 31; i++) {
-    //   if ((today + i + 1) !== 1) {
-    //     days.push(today + i)
-    //     today++
-    //   } else {
-    //     return
-    //   }
-    // }
-    // result[0].reserved.push(3)
-    // console.log(today)
-    // console.log(day, year)
-  })
+logger.info('To jest przykładowy log 2')
+logger.info({
+  label: 'info',
+  message: 'What time is the testing at?'
+})
+// async function getFirms () {
+//   const date = new Date()
+//   date.setDate(date.getDate() + 1)
+//   console.log(date)
+//   const s = date.toISOString().substr(0, 10) + 'T00:00:00.000'
+//   const e = date.toISOString().substr(0, 10) + 'T23:59:00.000'
+//   console.log('S', s, 'E', e)
+//   // const arr =[3, 4]
+//   const result = await db.query(
+//     `SELECT
+//     comment.login AS login,
+//     comment.value AS value
+//     FROM
+//     fault f,
+//     unnest(f.comments) AS comment
+//     WHERE
+//     f.id = 2;`
+//   )
+//   return result.rows
+// }
+// getFirms()
+//   .then((result) => {
+//     console.log(result)
+// })
+
+// const days = []
+// const year = new Date().getFullYear()
+// const day = new Date().getMonth() + 1
+// const today = new Date(year, day, 0).getDate()
+// for (let i = 1; i < 31; i++) {
+//   if ((today + i + 1) !== 1) {
+//     days.push(today + i)
+//     today++
+//   } else {
+//     return
+//   }
+// }
+// result[0].reserved.push(3)
+// console.log(today)
+// console.log(day, year)
 // `SELECT reserved FROM TimeSlot t
 // WHERE t.id = $1`, [69]
 //     'UPDATE TimeSlot t SET reserved = ARRAY[1] WHERE id = 69'

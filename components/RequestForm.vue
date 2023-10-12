@@ -54,7 +54,7 @@
             <!-- :min="today.toISOString().slice(0,10)" -->
             <v-spacer />
             <v-alert type="info" style="height: fit-content;">
-              Dostępne zaplanowanie na maksymalnie kolejne 4 tygydnie
+              Dostępne zaplanowanie na maksymalnie kolejne 4 tygodnie
             </v-alert>
           </v-row>
           <v-select

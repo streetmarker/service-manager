@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-row v-if="$store.state.user.token.length == 0" justify="center" align="center">
+    <LoginComponent :class="{ 'hidden-component': currentComponent }" />
+    <MainGrid :class="{ 'hidden-component': !currentComponent }" />
+    <br>
+    <FaultsList :class="{ 'hidden-component': !currentComponent }" />
+    <!-- <v-row v-if="$store.state.user.token.length == 0" justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
         <LoginComponent />
         <br>
@@ -13,10 +17,9 @@
       <v-row justify="center" align="center">
         <v-col cols="12" sm="8" md="6">
           <br>
-          <!-- <AddCustomer /> -->
         </v-col>
       </v-row>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -34,6 +37,21 @@ export default {
     FaultsList,
     MainGrid
     // AddCustomer
+  },
+  data: () => ({
+    showComponent: true
+  }),
+  computed: {
+    currentComponent () {
+      if (this.$store.state.user.token.length === 0) {
+        return false
+        // return 'LoginComponent'
+        // return 'RequestForm'
+      } else {
+        return true
+        // return 'RequestForm'
+      }
+    }
   },
   mounted () {
     // console.log('M', messaging)
@@ -62,7 +80,21 @@ export default {
       } catch (error) {
         console.error('Error requesting notification permission:', error)
       }
+    },
+    hideOut () {
+      this.showComponent = !this.showComponent
     }
   }
 }
 </script>
+<style>
+.hidden-component {
+  display: none;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>
