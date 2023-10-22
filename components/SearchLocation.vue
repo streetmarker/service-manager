@@ -3,7 +3,9 @@
     <v-card-title>Wyszukaj adres</v-card-title>
     <v-card-text>
       <v-text-field v-model="searchText" clearable label="Adres" />
-      {{ location.display_name }} <br>
+      <v-card-text v-if="!!location">
+        {{ location.display_name }}
+      </v-card-text>
       <v-alert v-if="errorMsg.length > 0" type="error">
         {{ errorMsg }}
       </v-alert>
@@ -15,7 +17,7 @@
       <v-btn color="secondary" clearable @click="searchLocation">
         Szukaj
       </v-btn>
-      <v-btn v-if="location.display_name.length > 0" color="primary" @click="addToDb">
+      <v-btn v-if="!!location" color="primary" @click="addToDb">
         Wybierz
       </v-btn>
     </v-card-actions>
@@ -30,11 +32,7 @@ export default {
   data () {
     return {
       searchText: '',
-      location: {
-        display_name: '',
-        lat: '',
-        lon: ''
-      },
+      location: null,
       errorMsg: '',
       info: ''
     }
@@ -42,18 +40,12 @@ export default {
 
   methods: {
     async searchLocation () {
-      const encodedQuery = encodeURIComponent(this.searchText)
-      const response = await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          this.$axios.get(`https://nominatim.openstreetmap.org/search?q=${encodedQuery}&format=json`)
-            .then(res => resolve(res))
-            .catch(err => reject(err))
-        }, 50)
-      })
-
-      const data = response.data[0]
-      if (data) {
-        this.location = data
+      const body = {
+        text: this.searchText
+      }
+      const response = await this.$axios.post('api/searchLocation', body)
+      if (response) {
+        this.location = response.data
         this.errorMsg = ''
       } else {
         this.errorMsg = 'Podaj szczegółowe dane'

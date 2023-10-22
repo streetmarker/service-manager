@@ -2,8 +2,10 @@
 const express = require('express')
 const db = require('../../pgUtils')
 const router = express.Router()
+const utils = require('../../../utils/utils')
 
 router.post('/', (req, res) => {
+  const startTime = performance.now()
   // eslint-disable-next-line no-var
   var { customerId, description, faultTypeId, timeSlotId, slotHourId } = req.body
   console.log('Create Fault: ', req.body)
@@ -42,6 +44,12 @@ router.post('/', (req, res) => {
     }
     res.status(500).send(err)
   }
+  const endTime = performance.now()
+  const executionTime = endTime - startTime
+  utils.logger.info({
+    label: utils.getFileName(__filename),
+    message: 'Czas wykonania: ' + executionTime
+  })
 })
 
 module.exports = router

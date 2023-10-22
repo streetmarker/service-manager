@@ -22,12 +22,12 @@ router.post('/', (req, res) => {
         (error, results) => {
           if (error) {
             console.log('Get faults error: ', error)
+            utils.logger.error({
+              label: utils.getFileName(__filename),
+              message: JSON.stringify(error)
+            })
             return res.json(error)
           }
-          utils.logger.info({
-            label: utils.getFileName(__filename),
-            message: JSON.stringify(results.rows)
-          })
           res.json(results)
         }
       )

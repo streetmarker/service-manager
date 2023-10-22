@@ -13,6 +13,7 @@ const getCustomers = require('./api/customer/getCustomers')
 
 const addLocation = require('./api/location/addLocation')
 const getLocations = require('./api/location/getLocations')
+const searchLocation = require('./api/location/searchLocation')
 
 const findSlot = require('./api/slot/findSlot')
 const autoInsertNew = require('./api/slot/autoInsertNew')
@@ -53,6 +54,7 @@ app.use('/getCustomers', getCustomers)
 
 app.use('/addLocation', addLocation)
 app.use('/getLocations', getLocations)
+app.use('/searchLocation', searchLocation)
 
 app.use('/findSlot', findSlot)
 app.use('/autoInsertNew', autoInsertNew)

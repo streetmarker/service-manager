@@ -1,8 +1,10 @@
 const express = require('express')
 const db = require('../../pgUtils')
 const router = express.Router()
+const utils = require('../../../utils/utils')
 
 router.get('/', (req, res) => {
+  const startTime = performance.now()
   db.query(
     `SELECT f.id, f.customer_ID, f.requestdate, f.description, f.faulttype_ID, f.timeslot_id, t.date, t.subcontractor_ID, sb.name,
     f.comments, f.slothour_ID, '' as hour, f.isActive, f.faultstatus_ID, t.serviceman_id, s.users_id, u.login, c.city, c.full_name, c.phone, l.display_name FROM Fault f
@@ -17,6 +19,12 @@ router.get('/', (req, res) => {
         console.log('Get faults error: ', error)
         return res.json(error)
       }
+      const endTime = performance.now()
+      const executionTime = endTime - startTime
+      utils.logger.info({
+        label: utils.getFileName(__filename),
+        message: 'Czas wykonania: ' + executionTime
+      })
       res.json(results)
     }
   )
