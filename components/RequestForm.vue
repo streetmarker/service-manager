@@ -65,12 +65,19 @@
             required
             data-cy="slot1"
           />
-          <v-select
+          <v-checkbox
+            v-model="checkbox"
+            label="Silna preferencja"
+          />
+          <v-alert type="info" style="height: fit-content;">
+            Po zaznaczeniu może zostać przypisana firma bardziej oddalona od adresu
+          </v-alert>
+          <!-- <v-select
             v-model="timeSlot_2"
             label="Alternatywny slot czasowy"
             :items="timeSlots"
             data-cy="slot2"
-          />
+          /> -->
         </v-col>
         <v-card-actions>
           <v-btn
@@ -112,7 +119,7 @@
     <v-card v-if="selectedSlot">
       <v-card-title>Wybrany slot czasowy:   {{ selectedSlot }}</v-card-title>
       <v-card-actions>
-        <v-btn color="secondary" data-cy="reserve" @click="createFault">
+        <v-btn color="success" data-cy="reserve" @click="createFault">
           Zarezerwój termin serwisu
         </v-btn>
       </v-card-actions>
@@ -229,8 +236,9 @@ export default {
           city: this.$store.state.customer.customer.city,
           typeId: type[0].id,
           date: this.picker,
-          timeSlot_1: slot1
+          timeSlot_1: slot1,
           // timeSlot_2: slot2
+          force: this.checkbox
         }
         try {
           const response = await this.$axios.post('api/findSlot', body)

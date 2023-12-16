@@ -1,112 +1,113 @@
 <!-- eslint-disable vue/no-lone-template -->
 <template>
-  <v-card>
-    <!-- firmy select -->
-    <v-banner
-      color="indigo darken-3"
-      rounded
-    >
-      <v-card-title>
-        Grafik Slotów
-        <v-select
-          v-model="firm"
-          style="max-width:30%; padding-left: 10%"
-          label="Wybierz firmę"
-          :items="firms"
-        />
-        <v-menu
-          ref="menu"
-          v-model="menu"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="auto"
-        >
-          <template #activator="{ on, attrs }">
-            <v-text-field
+  <div>
+    <v-card>
+      <!-- firms select -->
+      <!-- color="indigo darken-3" -->
+      <v-banner
+        color="secondary"
+        rounded
+      >
+        <v-card-title>
+          Grafik Slotów
+          <v-select
+            v-model="firm"
+            style="max-width:30%; padding-left: 10%"
+            label="Wybierz firmę"
+            :items="firms"
+          />
+          <v-menu
+            ref="menu"
+            v-model="menu"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateSelect"
+                label="Stan slotów na dzień"
+                prepend-icon="mdi-calendar"
+                v-bind="attrs"
+                required
+                v-on="on"
+              />
+            </template>
+            <v-date-picker
               v-model="dateSelect"
-              label="Stan slotów na dzień"
-              prepend-icon="mdi-calendar"
-              v-bind="attrs"
-              required
-              v-on="on"
+              no-title
             />
-          </template>
-          <v-date-picker
-            v-model="dateSelect"
-            no-title
-          />
-        </v-menu>
-      </v-card-title>
-    </v-banner>
-    <br>
-    <br>
-    <template>
-      <div>
-        <v-row
-          justify="center"
-          align="center"
-        />
-        <v-container
-          id="scroll-target"
-          style="max-height: 350px"
-          class="overflow-y-auto"
-        >
+          </v-menu>
+        </v-card-title>
+      </v-banner>
+      <br>
+      <br>
+      <template>
+        <div>
           <v-row
-            v-scroll:#scroll-target="onScroll"
-            align="center"
             justify="center"
+            align="center"
           />
-          <v-list v-for="timeSlot in timeSlots" :key="timeSlot.id">
-            <v-list-item v-if="new Date(timeSlot.date).toISOString().slice(0,10) == dateSelect">
-              <v-row>
-                <v-col max-width="10%" class="name">
-                  {{ timeSlot.username }}
-                </v-col>
-                <v-col v-for="time in timeTable" :key="time.id">
-                  <div v-if="!timeSlot.reserved.includes(time.id)">
-                    <v-tooltip top>
-                      <template #activator="{ on, attrs }">
-                        <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                        >
-                          {{ time.start }} -
-                          {{ time.end }}
-                        </v-btn>
-                      </template>
-                      <span>Id klienta:<br>
-                        Id umowy:</span>
-                    </v-tooltip>
-                  </div>
-                  <div v-else>
-                    <v-tooltip top>
-                      <template #activator="{ on, attrs }">
-                        <v-btn
-                          color="success"
-                          v-bind="attrs"
-                          v-on="on"
-                        >
-                          {{ time.start }} -
-                          {{ time.end }}
-                        </v-btn>
-                      </template>
-                      <span>Id klienta:<br>
-                        Id umowy:</span>
-                    </v-tooltip>
-                  </div>
-                </v-col>
-              </v-row>
-            </v-list-item>
-            <div v-else />
-          </v-list>
-        </v-container>
-      </div>
-    </template>
-    <!-- <v-btn @click="tmp">
-      tmp
-    </v-btn> -->
-  </v-card>
+          <v-container
+            id="scroll-target"
+            style="max-height: 350px; padding-top: 20px"
+            class="overflow-y-auto"
+          >
+            <v-row
+              v-scroll:#scroll-target="onScroll"
+              align="center"
+              justify="center"
+            />
+            <div>
+              <v-list v-for="timeSlot in timeSlots" :key="timeSlot.id">
+                <v-list-item v-if="new Date(timeSlot.date).toISOString().slice(0,10) == dateSelect" style="border: 1px solid #ccc; border-radius: 4px; padding: 4px;">
+                  <v-row>
+                    <v-col max-width="10%" class="name">
+                      {{ timeSlot.username }}
+                    </v-col>
+                    <v-col v-for="time in timeTable" :key="time.id">
+                      <div v-if="!timeSlot.reserved.includes(time.id)">
+                        <v-tooltip top>
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              {{ time.start }} -
+                              {{ time.end }}
+                            </v-btn>
+                          </template>
+                          <span>Id klienta:9875<br>
+                            Id umowy:LLU12-M3</span>
+                        </v-tooltip>
+                      </div>
+                      <div v-else>
+                        <v-tooltip top>
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              color="success"
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              {{ time.start }} -
+                              {{ time.end }}
+                            </v-btn>
+                          </template>
+                          <span>Id klienta:9875<br>
+                            Id umowy:LLU12-M3</span>
+                        </v-tooltip>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-list-item>
+              </v-list>
+            </div>
+          </v-container>
+        </div>
+      </template>
+    </v-card>
+  </div>
 </template>
 
 <script>

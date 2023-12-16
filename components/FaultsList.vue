@@ -4,7 +4,7 @@
   <div>
     <v-card>
       <v-banner
-        color="indigo darken-3"
+        color="secondary"
         rounded
         single-line
       >
@@ -15,9 +15,17 @@
             odświerz
             <v-icon>mdi-refresh</v-icon>
           </v-btn> -->
-          <v-btn @click="generateExcel()">
-            <v-icon>mdi-microsoft-excel</v-icon>
-          </v-btn>
+          <div>
+            <v-col>
+              <v-btn color="primary" @click="generateExcel()">
+                <v-icon>mdi-microsoft-excel</v-icon>
+              </v-btn>
+
+              <v-btn color="primary" @click="getFaults()">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
+            </v-col>
+          </div>
         </v-card-title>
       </v-banner>
       <v-card-text>
@@ -82,13 +90,22 @@
               </v-chip>
             </div>
           </template>
+          <template v-slot:item.deadline="{ item }">
+            <v-btn v-if="Math.floor((today - new Date(item.date)) / (1000 * 60 * 60 * 24)) > 0" color="error">
+              {{ Math.floor((today - new Date(item.date)) / (1000 * 60 * 60 * 24)) }}
+            </v-btn>
+            <v-btn v-else color="success">
+              {{ Math.floor((today - new Date(item.date)) / (1000 * 60 * 60 * 24)) }}
+            </v-btn>
+          </template>
+          <!-- </v-data-table> -->
+          <div class="text-center pt-2">
+            <v-pagination
+              v-model="page"
+              :length="pageCount"
+            />
+          </div>
         </v-data-table>
-        <div class="text-center pt-2">
-          <v-pagination
-            v-model="page"
-            :length="pageCount"
-          />
-        </div>
       </v-card-text>
     </v-card>
     <!-- <FaultDetailsControl :show="modal" :fault="faultData" @open="handleModal" /> -->
@@ -115,6 +132,7 @@ export default {
 
   data () {
     return {
+      today: Date,
       modal: false,
       faultData: {},
       page: 1,
@@ -162,6 +180,11 @@ export default {
           value: 'isactive'
         },
         {
+          text: 'Terminowość (D)',
+          align: 'start',
+          value: 'deadline'
+        },
+        {
           text: 'Miasto',
           align: 'start',
           value: 'city'
@@ -195,6 +218,7 @@ export default {
   },
 
   mounted () {
+    this.today = new Date()
     this.getFaults()
   },
   // watch: {

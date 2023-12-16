@@ -37,12 +37,6 @@
                     <v-list-item-subtitle>{{ fault.faulttype_id }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Godzina</v-list-item-title>
-                    <v-list-item-subtitle>{{ hour }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
               </v-list>
             </v-card-text>
           </v-card>
@@ -82,6 +76,21 @@
       </v-layout>
     </v-container>
     <v-text-field v-model="comment" label="Dodaj komentarz" />
+    <div v-if="!fault.faultstatus_id">
+      <v-chip color="success" outlined>
+        NOWE
+      </v-chip>
+    </div>
+    <div v-else-if="fault.faultstatus_id==2">
+      <v-chip rounded color="accent" outlined>
+        W TRAKCIE
+      </v-chip>
+    </div>
+    <div v-else>
+      <v-chip rounded color="error" outlined>
+        ZAKOŃCZONA
+      </v-chip>
+    </div>
     <v-select
       v-model="selectedStatus"
       :items="statusNames"

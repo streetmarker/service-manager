@@ -12,10 +12,20 @@
         {{ $store.state.user.user.firstname }} | Wyloguj się
       </v-btn>
     </v-app-bar>
-    <v-app-bar v-else color="indigo darken-1" :clipped-left="clipped" fixed app>
+    <!-- color="indigo darken-1 -->
+    <v-app-bar
+      v-else
+      dark
+      color="primary"
+      :clipped-left="clipped"
+      fixed
+      app
+    >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
-        {{ title }}
+        <v-btn text to="/">
+          {{ title }}
+        </v-btn>
       </v-toolbar-title>
       <v-spacer />
       <v-btn
@@ -53,7 +63,7 @@
     </v-navigation-drawer>
     <v-footer app>
       <span>&copy; {{ new Date().getFullYear() }} Service Panel</span>
-      <v-spacer />
+      <!-- <v-spacer />
       <v-btn color="primary" to="/">
         P
       </v-btn>
@@ -64,7 +74,7 @@
       <v-spacer />
       <v-btn color="accent" to="/mobileApp">
         M
-      </v-btn>
+      </v-btn> -->
     </v-footer>
   </v-app>
 </template>

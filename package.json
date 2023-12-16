@@ -11,8 +11,8 @@
     "lint": "npm run lint:js",
     "lintfix": "npm run lint:js -- --fix",
     "test": "npx cypress open",
-    "deploy": "scp -r -f ./test ubuntu@138.2.137.156:/var/www/servicemanager99.sytes.net/",
-    "local-deploy": "scp -r -f ./test mike@192.168.1.39:/var/www/html/service-manager/",
+    "deploy": "scp -r -f ./ ubuntu@138.2.137.156:/var/www/servicemanager99.sytes.net/",
+    "local-deploy": "scp -r -f components pages server layouts store static mike@192.168.1.46:/var/www/html/service-manager/",
     "insert-slots": "node ./server/api/slot/autoInsert.js"
   },
   "dependencies": {
