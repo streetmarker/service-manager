@@ -99,13 +99,13 @@
             </v-btn>
           </template>
           <!-- </v-data-table> -->
-          <div class="text-center pt-2">
-            <v-pagination
-              v-model="page"
-              :length="pageCount"
-            />
-          </div>
         </v-data-table>
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="page"
+            :length="pageCount"
+          />
+        </div>
       </v-card-text>
     </v-card>
     <!-- <FaultDetailsControl :show="modal" :fault="faultData" @open="handleModal" /> -->

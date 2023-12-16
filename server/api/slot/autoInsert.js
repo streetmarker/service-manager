@@ -20,8 +20,6 @@ async function getFirms () {
 }
 getFirms()
   .then((result) => {
-    // console.log(result)
-    // const today = new Date().getDate()
     const year = new Date().getFullYear()
     const currentMonth = new Date().getMonth() + 1
     const monthDays = new Date(year, currentMonth, 0).getDate()
@@ -31,7 +29,7 @@ getFirms()
     result.forEach((element) => {
       console.log(element)
       for (let i = 0; i < daysToInsert; i++) {
-        // Calculate the date for the current iteration
+      // Calculate the date for the current iteration
         const date = new Date()
         date.setDate(date.getDate() + i)
 
@@ -40,9 +38,6 @@ getFirms()
           [element.svmid, element.subid, date]
         )
         console.log(date)
-        // if (date.getDate() === 1) { // block adding slots for next month
-        //   break
-        // }
       }
     })
   })
