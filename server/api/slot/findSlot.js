@@ -40,7 +40,8 @@ router.post('/', async (req, res) => {
     const end = date + 'T23:59:00.000'
     // get serviceman with preferred slot
     const res2prefer = await db.query(
-        `SELECT t.id as slotId, t.reserved, se.qualifications FROM subcontractor su
+        `SELECT t.id as slotId, t.reserved, se.qualifications, su."name" as firmName
+        FROM subcontractor su
         LEFT JOIN serviceman se ON se.subcontractor_id = su.id
         LEFT JOIN timeslot t ON t.serviceman_id = se.id
         WHERE se.subcontractor_id = $1
@@ -49,7 +50,8 @@ router.post('/', async (req, res) => {
         AND NOT ARRAY[$4]::integer[] <@ t.reserved`, [sortedFirms[0].firm.id, start, end, timeSlot_1])
     // get rest of serviceman in case client chooses another slot
     const res2rest = await db.query(
-        `SELECT t.id as slotId, t.reserved, se.qualifications FROM subcontractor su
+        `SELECT t.id as slotId, t.reserved, se.qualifications, su."name" as firmName
+        FROM subcontractor su
         LEFT JOIN serviceman se ON se.subcontractor_id = su.id
         LEFT JOIN timeslot t ON t.serviceman_id = se.id
         WHERE se.subcontractor_id = $1
@@ -62,7 +64,8 @@ router.post('/', async (req, res) => {
     let endLoop = false
     while (i <= 5 && i <= len - 1) {
       res2next = await db.query(
-          `SELECT t.id as slotId, t.reserved, se.qualifications FROM subcontractor su
+          `SELECT t.id as slotId, t.reserved, se.qualifications, su."name" as firmName
+          FROM subcontractor su
           LEFT JOIN serviceman se ON se.subcontractor_id = su.id
           LEFT JOIN timeslot t ON t.serviceman_id = se.id
           WHERE se.subcontractor_id = $1

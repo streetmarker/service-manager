@@ -80,6 +80,12 @@ export default {
       logged: false
     }
   },
+  head () {
+    // SEO
+    return {
+      title: 'svman-app'
+    }
+  },
   watch: {
     logged () {
       this.init()

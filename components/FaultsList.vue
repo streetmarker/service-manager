@@ -130,8 +130,15 @@ export default {
   name: 'ServiceManagerFaultsList',
   components: { FaultDetailsControl, AddCommentModal, CancelService, ModifyService, ReassignService },
 
+  props: {
+    // eslint-disable-next-line vue/require-default-prop
+    faults: {
+      type: Array
+    }
+  },
   data () {
     return {
+      init: false,
       today: Date,
       modal: false,
       faultData: {},
@@ -210,16 +217,19 @@ export default {
       ]
     }
   },
-
   computed: {
     pages () {
-      return Math.ceil(this.faultsList.length / this.itemsPerPage)
+      return Math.ceil(this.faults.length / this.itemsPerPage)
     }
   },
+  // created () {
+  //   this.faultsList
+  // },
 
   mounted () {
     this.today = new Date()
-    this.getFaults()
+    this.getFaults() // tmp
+    this.init = true
   },
   // watch: {
   //   modal () {
@@ -244,37 +254,29 @@ export default {
         this.$refs[action]._data.showIn = true
       }
     },
-    async getFaults () {
-      const response = await this.$axios.get('api/getFaults')
-      console.log(response)
-      try {
-        this.faultsList = response.data.rows
-        // if (this.headers.length === 0) {
-        //   this.headers.push({
-        //   // text: '',
-        //     align: 'start',
-        //     sortable: false,
-        //     value: 'actions'
-        //   },
-        //   {
-        //     text: 'Szczegóły',
-        //     align: 'start',
-        //     sortable: false,
-        //     value: 'details'
-        //   })
-        //   response.data.fields.forEach((el) => {
-        //     this.headers.push({ text: el.name, align: 'start', sortable: false, value: el.name })
-        //   })
-        // }
-      } catch (err) {
-        console.log(err)
+    async getFaults () { // tmp
+      if (this.init) {
+        const startTime = new Date()
+
+        const response = await this.$axios.get('api/getFaults')
+        // console.log(response)
+        const endTime = new Date()
+        const executionTime = endTime - startTime
+        console.log('getFaults', executionTime, 'ms')
+        try {
+          this.faultsList = response.data.rows
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        this.faultsList = this.faults
       }
     },
     // handleModal (value) {
     //   this.modal = value
     // },
     generateExcel () {
-      tableToXlsx(this.faultsList, 'Lista Zleceń')
+      tableToXlsx(this.faults, 'Lista Zleceń')
     }
   }
 }

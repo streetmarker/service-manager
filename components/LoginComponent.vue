@@ -79,12 +79,12 @@ export default {
     errorMsg: '',
     successMsg: ''
   }),
-  head () {
-    // SEO
-    return {
-      title: 'login'
-    }
-  },
+  // head () {
+  //   // SEO
+  //   return {
+  //     title: 'login'
+  //   }
+  // },
   methods: {
     ...mapActions('user', ['fetchUser', 'fetchToken', 'logoutAction']),
     ...mapActions('customer', ['fetchCustomer', 'fetchTokenCustomer', 'logoutActionCustomer']),

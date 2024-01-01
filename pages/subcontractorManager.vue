@@ -261,6 +261,12 @@ export default {
       dialogDelete: false
     }
   },
+  head () {
+    // SEO
+    return {
+      title: 'firms-mngm'
+    }
+  },
   watch: {
     firm (val) {
       setTimeout(() => {

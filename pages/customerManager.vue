@@ -50,6 +50,12 @@ export default {
       headers: []
     }
   },
+  head () {
+    // SEO
+    return {
+      title: 'customer-mngm'
+    }
+  },
   watch: {
   },
   mounted () {

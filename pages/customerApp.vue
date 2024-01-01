@@ -23,6 +23,12 @@ export default {
   data: () => ({
     showComponent: true
   }),
+  head () {
+    // SEO
+    return {
+      title: 'customer-app'
+    }
+  },
   computed: {
     currentComponent () {
       if (this.$store.state.customer.token.length === 0) {
